@@ -7,18 +7,7 @@ const removeRatingValidator = [
     .notEmpty()
     .withMessage("product_id must be provide!")
     .isMongoId()
-    .withMessage("product_id must be valid id!")
-    .custom(async (value) => {
-      try {
-        const product = await Product.findById({ product_id: value });
-        if (product) {
-          throw createError("product_id isn't valid!");
-        }
-      } catch (error) {
-        throw createError(error.message);
-      }
-    })
-    .withMessage("product_id isn't valid!"),
+    .withMessage("product_id must be valid id!"),
 ];
 
 const removeRatingValidatorHandler = (req, res, next) => {

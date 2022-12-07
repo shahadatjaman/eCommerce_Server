@@ -400,9 +400,11 @@ module.exports = {
         { new: true, upsert: true }
       );
 
+      const productRating = await Rating.find({ product_id });
+
       return res.status(200).json({
         message: "Ok",
-        productRating: updatedRating,
+        productRating: productRating,
       });
     } else {
       // TODO: Create a new raing
@@ -414,7 +416,9 @@ module.exports = {
         createdAt: newTime(),
         updatedAt: newTime(),
       });
-      const productRating = await newRating.save();
+      await newRating.save();
+
+      const productRating = await Rating.find({ product_id });
       return res.status(200).json({
         productRating,
       });
@@ -426,13 +430,49 @@ module.exports = {
 
     const { product_id } = req.params;
 
-    const removedRating = await Rating.findOne({ user_id: _id, product_id });
+    const removedRating = await Rating.findOneAndDelete({
+      user_id: _id,
+      product_id,
+    });
+    const ratings = await Rating.find({ product_id });
 
     res.status(200).json({
       message: "Rating successfuly deleted!",
       removedRating,
+      ratings,
     });
   },
+
+  // Get ratings
+  async getRatings(req, res) {
+    const { product_id } = req.params;
+
+    const isvalid = isValidID({ product_id });
+
+    if (!isvalid) {
+      return res.status(400).json({
+        error: "Product ID is not valid",
+      });
+    }
+
+    const ratings = await Rating.find({ product_id });
+    res.status(200).json({
+      ratings,
+    });
+  },
+
+  // get rating by id
+  async getRating(req, res) {
+    const { _id } = req.user;
+    console.log(_id);
+    const { product_id } = req.params;
+    const rating = await Rating.findOne({ user_id: _id, product_id });
+
+    res.status(200).json({
+      rating,
+    });
+  },
+
   // Get all products
   async getProducts(req, res) {
     const products = await Product.find({ isValid: true });

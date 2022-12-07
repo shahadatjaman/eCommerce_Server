@@ -6,6 +6,7 @@ const User = require("../../models/User/User");
 
 const tokenGenerate = require("../../helper/jwtGenerator ");
 const { serverError, clientError } = require("../../utils/error");
+const { isValidMongoID } = require("../../utils");
 
 module.exports = {
   async addCustomUser(req, res) {
@@ -110,5 +111,15 @@ module.exports = {
         },
       });
     }
+  },
+  // Get user by id
+  async getUser(req, res) {
+    const { user_id } = req.params;
+
+    const user = await User.findOne({ _id: user_id });
+
+    res.status(200).json({
+      user,
+    });
   },
 };

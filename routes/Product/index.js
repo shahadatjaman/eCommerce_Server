@@ -23,10 +23,12 @@ const {
   getvariation,
   createRating,
   removeRating,
+  getRatings,
+  getRating,
 } = require("../../controller/Admin/product/");
 
 // Authentication checks middleware
-const { authChecker } = require("../../middleware/Auth/");
+const { authChecker, authUser } = require("../../middleware/Auth/");
 
 // Product input validation middleware
 const {
@@ -89,6 +91,10 @@ const {
   removeRatingValidator,
   removeRatingValidatorHandler,
 } = require("../../middleware/Validator/product/removeRating");
+const {
+  getRatingValidatorHandler,
+  getRatingValidator,
+} = require("../../middleware/Validator/product/getRatingValidator");
 
 // Create a new empty product
 router.get("/createemptyproduct", authChecker, createEmptyProduct);
@@ -183,18 +189,30 @@ router.delete(
 // Create Product rating
 router.post(
   "/createrating",
-  authChecker,
+  authUser,
   ratingValidator,
   ratingValidatorHandler,
   createRating
 );
 // remove rating
-router.post(
+router.delete(
   "/removerating/:product_id",
-  authChecker,
+  authUser,
   removeRatingValidator,
   removeRatingValidatorHandler,
   removeRating
+);
+
+// Get ratings
+router.get("/getratings/:product_id", getRatings);
+
+// Get rating by user id and product id
+router.get(
+  "/getrating/:product_id",
+  authUser,
+  getRatingValidator,
+  getRatingValidatorHandler,
+  getRating
 );
 
 // get products

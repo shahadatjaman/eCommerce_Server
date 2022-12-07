@@ -18,6 +18,13 @@ module.exports = {
       return ObjectId.isValid(product_id);
     }
   },
+  isValidMongoID(id) {
+    if (!id) {
+      return false;
+    } else {
+      return ObjectId.isValid(id);
+    }
+  },
 
   requiremnet() {
     return {

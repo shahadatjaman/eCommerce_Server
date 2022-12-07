@@ -4,11 +4,16 @@ const {
   addCustomUser,
   addSocialUser,
   login,
+  getUser,
 } = require("../../controller/user/");
 const {
   userAddress,
   getUserAddress,
 } = require("../../controller/user/userAddress");
+const {
+  getUserValidator,
+  getUserValidatorHandler,
+} = require("../../middleware/Validator/user/getUserValidator");
 
 const {
   loginValidatorHandler,
@@ -32,7 +37,12 @@ router.post(
 router.post("/useraddress", authchecker, userAddress);
 
 router.get("/getuseraddress", authchecker, getUserAddress);
-
+router.get(
+  "/getuser/:user_id",
+  getUserValidator,
+  getUserValidatorHandler,
+  getUser
+);
 router.post("/login", loginValidator, loginValidatorHandler, login);
 
 module.exports = router;
