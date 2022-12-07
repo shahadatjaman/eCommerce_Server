@@ -22,21 +22,14 @@ const addUserValidators = [
     }),
 
   check("email")
-    .isEmail()
-    .withMessage("Invalid email address!")
     .trim()
-    .custom(async (value) => {
-      try {
-        const user = await User.findOne({ email: value });
-        if (user) {
-          throw createError("Email already is use!");
-        }
-      } catch (error) {
-        throw createError(error.message);
-      }
-    }),
+    .notEmpty()
+    .withMessage("Email should not be empty")
+    .isEmail()
+    .withMessage("Invalid email address!"),
 
   check("password")
+    .optional()
     .isStrongPassword()
     .withMessage(
       "Password must be at least 8 and should contain at least 1 lowercase, 1 upperCase, 1 number and 1 symbol!"
@@ -58,31 +51,7 @@ const addUserValidatorHandler = (req, res, next) => {
   }
 };
 
-// Normal Validation
-const loginValidator = (req, res, next) => {
-  const { username, password } = req.body;
-  const errors = {};
-  if (!username) {
-    errors.username = "Username is required";
-  } else if (username.trim().length === 0) {
-    errors.username = "Username is required";
-  }
-
-  if (!password) {
-    errors.password = "Password is required";
-  } else if (password.trim().length === 0) {
-    errors.password = "Password is required";
-  }
-
-  if (Object.keys(errors).length === 0) {
-    next();
-  } else {
-    throw errors;
-  }
-};
-
 module.exports = {
   addUserValidators,
   addUserValidatorHandler,
-  loginValidator,
 };

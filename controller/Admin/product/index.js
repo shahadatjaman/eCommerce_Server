@@ -8,6 +8,7 @@ const VariationOption = require("../../../models/Vendor/Product/Product_variatio
 const Product_variations_options = require("../../../models/Vendor/Product/Product_variations_options");
 const Discount = require("../../../models/Vendor/Product/Discount");
 const ProductInventory = require("../../../models/Vendor/Product/Product_inventory");
+const Rating = require("../../../models/Vendor/Product/Rating");
 
 module.exports = {
   // Create initial product
@@ -378,6 +379,60 @@ module.exports = {
     });
   },
 
+  // Create a product rating
+  async createRating(req, res) {
+    const { _id } = req.user;
+    const { product_id, rating, text } = req.body;
+
+    const ratings = await Rating.findOne({ product_id, user_id: _id });
+
+    if (ratings) {
+      // TODO: Update the rating
+      const updatedRating = await Rating.findOneAndUpdate(
+        {
+          product_id,
+          user_id: _id,
+        },
+        {
+          ...req.body,
+          updatedAt: newTime(),
+        },
+        { new: true, upsert: true }
+      );
+
+      return res.status(200).json({
+        message: "Ok",
+        productRating: updatedRating,
+      });
+    } else {
+      // TODO: Create a new raing
+      const newRating = new Rating({
+        user_id: _id,
+        product_id,
+        rating,
+        text,
+        createdAt: newTime(),
+        updatedAt: newTime(),
+      });
+      const productRating = await newRating.save();
+      return res.status(200).json({
+        productRating,
+      });
+    }
+  },
+  // Remove rating
+  async removeRating(req, res) {
+    const { _id } = req.user;
+
+    const { product_id } = req.params;
+
+    const removedRating = await Rating.findOne({ user_id: _id, product_id });
+
+    res.status(200).json({
+      message: "Rating successfuly deleted!",
+      removedRating,
+    });
+  },
   // Get all products
   async getProducts(req, res) {
     const products = await Product.find({ isValid: true });

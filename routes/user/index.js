@@ -11,17 +11,21 @@ const {
 } = require("../../controller/user/userAddress");
 
 const {
+  loginValidatorHandler,
+  loginValidator,
+} = require("../../middleware/Validator/user/loginValidation");
+
+const {
   addUserValidators,
   addUserValidatorHandler,
-  loginValidator,
 } = require("../../middleware/Validator/user/userValidator");
 
 // Add user
 router.post(
   "/register",
-  addSocialUser,
   addUserValidators,
   addUserValidatorHandler,
+  addSocialUser,
   addCustomUser
 );
 
@@ -29,6 +33,6 @@ router.post("/useraddress", authchecker, userAddress);
 
 router.get("/getuseraddress", authchecker, getUserAddress);
 
-router.post("/login", loginValidator, login);
+router.post("/login", loginValidator, loginValidatorHandler, login);
 
 module.exports = router;

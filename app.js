@@ -22,8 +22,8 @@ require("dotenv").config();
 
 const PORT = 5000;
 
-app.use("/auth", require("./routes/users/"));
-app.use("/vendor", require("./routes/Vendor/product"));
+app.use("/auth", require("./routes/user"));
+app.use("/vendor", require("./routes/Product/"));
 app.use("/v2", require("./routes/Order/index"));
 app.use(commonMiddleware);
 
