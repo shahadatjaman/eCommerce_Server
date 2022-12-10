@@ -11,9 +11,10 @@ const ratingSchema = new Schema({
     ...requiremnet,
   },
   rating: {
-    type: Decimal128,
+    type: Number,
     ...requiremnet,
   },
+
   text: {
     type: String,
     ...requiremnet,

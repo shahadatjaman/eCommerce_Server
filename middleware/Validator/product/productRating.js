@@ -9,8 +9,8 @@ const ratingValidator = [
   check("rating")
     .notEmpty()
     .withMessage("rating must be provide!")
-    .isNumeric()
-    .withMessage("rating must be number!"),
+    .isString()
+    .withMessage("rating must be string!"),
   check("text")
     .notEmpty()
     .withMessage("text must be provide!")

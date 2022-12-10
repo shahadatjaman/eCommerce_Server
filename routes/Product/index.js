@@ -1,30 +1,13 @@
 const router = require("express").Router();
 const {
   createEmptyProduct,
-  createCategories,
-  createTag,
   createShareLink,
-  productVariations,
   deleteProduct,
   createProduct,
-  productVariationsOptions,
-  getCategories,
-  removeTag,
-  removeVariation,
-  createDiscount,
-  inventory,
   getProducts,
-  getInventory,
   getDiscount,
-  deleteOption,
-  getOptions,
-  getVariants,
   getProduct,
-  getvariation,
-  createRating,
-  removeRating,
-  getRatings,
-  getRating,
+  getProductByCategory,
 } = require("../../controller/Admin/product/");
 
 // Authentication checks middleware
@@ -96,6 +79,46 @@ const {
   getRatingValidator,
 } = require("../../middleware/Validator/product/getRatingValidator");
 
+const {
+  createRating,
+  removeRating,
+  getRating,
+  getRatings,
+} = require("../../controller/Admin/product/rating");
+const { createDiscount } = require("../../controller/Admin/product/discount");
+const { createTag, removeTag } = require("../../controller/Admin/product/Tag");
+const {
+  productVariations,
+  removeVariation,
+  productVariationsOptions,
+  deleteOption,
+  getVariants,
+  getvariation,
+  getOptions,
+} = require("../../controller/Admin/product/variation");
+const {
+  inventory,
+  createInventory,
+  getInventory,
+} = require("../../controller/Admin/product/inventory");
+const {
+  createCategories,
+  getCategories,
+  getCategory,
+} = require("../../controller/Admin/product/category");
+const {
+  getCategoryValidator,
+  getCategoriesValidatorHandler,
+} = require("../../middleware/Validator/categories/getCategoryValidation");
+const {
+  productCategoryValidatorHandler,
+  productCategoryValidator,
+} = require("../../middleware/Validator/product/getProductWithCategoryValidation");
+const {
+  productIdValidator,
+  productIdValidatorHandler,
+} = require("../../middleware/Validator/product/product_idValidation");
+
 // Create a new empty product
 router.get("/createemptyproduct", authChecker, createEmptyProduct);
 
@@ -118,7 +141,15 @@ router.post(
 );
 
 // Get categories
-router.get("/getcategories", authChecker, getCategories);
+router.get("/getcategories", getCategories);
+
+// Get categories by product id
+router.get(
+  "/getcategory/:product_id",
+  getCategoryValidator,
+  getCategoriesValidatorHandler,
+  getCategory
+);
 
 // Create a product tag
 router.post("/createtag", tagValidator, tagValidatorHandler, createTag);
@@ -174,7 +205,7 @@ router.post(
   authChecker,
   quantityValidation,
   quantityValidatorHandler,
-  inventory
+  createInventory
 );
 
 // Delete a product
@@ -218,6 +249,14 @@ router.get(
 // get products
 router.get("/getproducts", getProducts);
 
+// Get product with sorting
+router.get(
+  "/getproducts/:category_id/:from-:to",
+  productCategoryValidator,
+  productCategoryValidatorHandler,
+  getProductByCategory
+);
+
 // Get single product
 router.get("/getproduct/:product_id", getProduct);
 
@@ -225,13 +264,18 @@ router.get("/getproduct/:product_id", getProduct);
 router.get("/getinventory/:product_id", authChecker, getInventory);
 
 // Get product discount
-router.get("/getdiscount/:product_id", authChecker, getDiscount);
+router.get("/getdiscount/:product_id", getDiscount);
 
 // Get product  variations
 router.get("/getvariations/:product_id", getVariants);
 
 // Get Variation
-router.get("/getvariation/:product_id", getvariation);
+router.get(
+  "/getvariation/:product_id",
+  productIdValidator,
+  productIdValidatorHandler,
+  getvariation
+);
 
 // Get variation options
 router.get("/getoptions/:variation_id", authChecker, getOptions);

@@ -4,9 +4,9 @@ const User = require("../../../models/User/User");
 
 // Express validation
 const loginValidator = [
-  check("username").trim().isEmpty().withMessage("must contain a number"),
+  check("username").trim().notEmpty().withMessage("username is required!"),
 
-  check("password").isEmpty().withMessage("Password is required!"),
+  check("password").notEmpty().withMessage("Password is required!"),
 ];
 
 const loginValidatorHandler = (req, res, next) => {

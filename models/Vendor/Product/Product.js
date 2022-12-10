@@ -38,6 +38,9 @@ const productSchema = new Schema({
     required: true,
     trim: true,
   },
+  tot_rating: {
+    type: Number,
+  },
 
   category_id: {
     type: String,
