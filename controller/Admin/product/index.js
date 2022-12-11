@@ -105,7 +105,7 @@ module.exports = {
 
   // Get all products
   async getProducts(req, res) {
-    const products = await Product.find({ isValid: true }).limit(12);
+    const products = await Product.find({ isValid: true }).limit(13);
 
     res.status(200).json({
       products,
@@ -177,6 +177,23 @@ module.exports = {
           category_id: category_id,
         },
       },
+      {
+        $skip: Number(from),
+      },
+      {
+        $limit: Number(to) === 0 ? 1 : Number(to),
+      },
+    ]);
+
+    res.status(200).json({
+      products,
+    });
+  },
+  // Get product with limitation
+  async getProductsByFiltered(req, res) {
+    const { from, to } = req.params;
+
+    const products = await Product.aggregate([
       {
         $skip: Number(from),
       },

@@ -8,6 +8,7 @@ const {
   getDiscount,
   getProduct,
   getProductByCategory,
+  getProductsByFiltered,
 } = require("../../controller/Admin/product/");
 
 // Authentication checks middleware
@@ -118,6 +119,10 @@ const {
   productIdValidator,
   productIdValidatorHandler,
 } = require("../../middleware/Validator/product/product_idValidation");
+const {
+  getProductsValidator,
+  getProductsValidatorHandler,
+} = require("../../middleware/Validator/product/getProductsValidation");
 
 // Create a new empty product
 router.get("/createemptyproduct", authChecker, createEmptyProduct);
@@ -249,7 +254,7 @@ router.get(
 // get products
 router.get("/getproducts", getProducts);
 
-// Get product with sorting
+// Get product by category id
 router.get(
   "/getproducts/:category_id/:from-:to",
   productCategoryValidator,
@@ -279,5 +284,12 @@ router.get(
 
 // Get variation options
 router.get("/getoptions/:variation_id", authChecker, getOptions);
+
+router.get(
+  "/getproducts/:from-:to",
+  getProductsValidator,
+  getProductsValidatorHandler,
+  getProductsByFiltered
+);
 
 module.exports = router;
