@@ -1,11 +1,24 @@
 const { check, validationResult, param } = require("express-validator");
 
 const productCategoryValidator = [
-  param("category_id")
+  check("category_id")
+    .optional()
     .notEmpty()
     .withMessage("category_id must be provid!")
     .isMongoId()
     .withMessage("category_id must be valid"),
+  check("minPrice")
+    .optional()
+    .notEmpty()
+    .withMessage("min price is required!")
+    .isNumeric()
+    .withMessage("minPrice must be number"),
+  check("maxPrice")
+    .optional()
+    .notEmpty()
+    .withMessage("max price is required!")
+    .isNumeric()
+    .withMessage("maxPrice must be number"),
   param("from")
     .notEmpty()
     .withMessage("from(skip) must be provid!")

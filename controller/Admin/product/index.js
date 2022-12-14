@@ -1,5 +1,5 @@
 const Product = require("../../../models/Vendor/Product/Product");
-const { newTime, objectId, isValidID } = require("../../../utils");
+const { newTime, objectId, isValidID, escape } = require("../../../utils");
 const Categories = require("../../../models/Vendor/Product/Categories");
 const Tag = require("../../../models/Vendor/Product/Tag");
 const ShareLinks = require("../../../models/Vendor/Product/Share_link");
@@ -112,6 +112,24 @@ module.exports = {
     });
   },
 
+  // Get prodcuts by text
+  async getProductsText(req, res) {
+    const { name } = req.params;
+
+    const name_search_regex = new RegExp(escape(name.trim()), "i");
+
+    const products = await Product.find({
+      $or: [
+        {
+          name: name_search_regex,
+        },
+      ],
+    });
+    res.status(200).json({
+      products,
+    });
+  },
+
   // Get Single product
   async getProduct(req, res) {
     const { product_id } = req.params;
@@ -148,6 +166,27 @@ module.exports = {
     }
   },
 
+  // Get sortedProducts
+  async getSortedProducts(req, res) {
+    const { key, value, from, to } = req.params;
+
+    const products = await Product.aggregate([
+      {
+        $sort: { [key]: Number(value) },
+      },
+      {
+        $skip: Number(from),
+      },
+      {
+        $limit: Number(to),
+      },
+    ]);
+
+    res.status(200).json({
+      products,
+    });
+  },
+
   // Get Product discount
   async getDiscount(req, res) {
     const { product_id } = req.params;
@@ -169,21 +208,33 @@ module.exports = {
 
   // Get product with sorting
   async getProductByCategory(req, res) {
-    const { from, to, category_id } = req.params;
+    const { category_id, minPrice, maxPrice } = req.body;
+    const { from, to } = req.params;
 
-    const products = await Product.aggregate([
-      {
-        $match: {
-          category_id: category_id,
-        },
-      },
+    const pipelineOne = [
+      maxPrice
+        ? {
+            $match: {
+              price: { $lte: Number(maxPrice), $gte: Number(minPrice) },
+            },
+          }
+        : { $sort: { name: -1 } },
+      category_id
+        ? {
+            $match: {
+              category_id: category_id,
+            },
+          }
+        : { $skip: Number(from) },
       {
         $skip: Number(from),
       },
       {
         $limit: Number(to) === 0 ? 1 : Number(to),
       },
-    ]);
+    ];
+
+    const products = await Product.aggregate(pipelineOne);
 
     res.status(200).json({
       products,

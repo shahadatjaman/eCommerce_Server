@@ -9,6 +9,8 @@ const {
   getProduct,
   getProductByCategory,
   getProductsByFiltered,
+  getProductsText,
+  getSortedProducts,
 } = require("../../controller/Admin/product/");
 
 // Authentication checks middleware
@@ -87,7 +89,11 @@ const {
   getRatings,
 } = require("../../controller/Admin/product/rating");
 const { createDiscount } = require("../../controller/Admin/product/discount");
-const { createTag, removeTag } = require("../../controller/Admin/product/Tag");
+const {
+  createTag,
+  removeTag,
+  getTags,
+} = require("../../controller/Admin/product/Tag");
 const {
   productVariations,
   removeVariation,
@@ -123,6 +129,18 @@ const {
   getProductsValidator,
   getProductsValidatorHandler,
 } = require("../../middleware/Validator/product/getProductsValidation");
+const {
+  getTagsValidation,
+  getTagsValidatorHandler,
+} = require("../../middleware/Validator/tags");
+const {
+  getProductsByTextValidator,
+  getProductsByTextValidatorHandler,
+} = require("../../middleware/Validator/product/getProductByText");
+const {
+  getSortedValidator,
+  getSortedValidatorHandler,
+} = require("../../middleware/Validator/product/sortedProducts");
 
 // Create a new empty product
 router.get("/createemptyproduct", authChecker, createEmptyProduct);
@@ -145,6 +163,22 @@ router.post(
   createCategories
 );
 
+// Get product by text
+router.get(
+  "/getproducts/:name",
+  getProductsByTextValidator,
+  getProductsByTextValidatorHandler,
+  getProductsText
+);
+
+// get sorted products
+router.get(
+  "/getsortedproducts/:key/:value/:from-:to",
+  getSortedValidator,
+  getSortedValidatorHandler,
+  getSortedProducts
+);
+
 // Get categories
 router.get("/getcategories", getCategories);
 
@@ -161,6 +195,14 @@ router.post("/createtag", tagValidator, tagValidatorHandler, createTag);
 
 // Remove tag
 router.post("/romvetag", authChecker, removeTag);
+
+// Get tags
+router.get(
+  "/gettags/:from-:to",
+  getTagsValidation,
+  getTagsValidatorHandler,
+  getTags
+);
 
 // Create share_link
 router.post(
@@ -255,8 +297,8 @@ router.get(
 router.get("/getproducts", getProducts);
 
 // Get product by category id
-router.get(
-  "/getproducts/:category_id/:from-:to",
+router.post(
+  "/getproducts/:from-:to",
   productCategoryValidator,
   productCategoryValidatorHandler,
   getProductByCategory

@@ -12,7 +12,7 @@ module.exports = {
 
     if (ratings) {
       // TODO: Update the rating
-      const updatedRating = await Rating.findOneAndUpdate(
+      await Rating.findOneAndUpdate(
         {
           product_id,
           user_id: _id,
@@ -23,13 +23,6 @@ module.exports = {
         },
         { new: true, upsert: true }
       );
-
-      const product = await Product.findById(product_id);
-
-      if (product.tot_rating) {
-        product.tot_rating += Number(rating);
-        await product.save();
-      }
 
       const productRating = await Rating.find({ product_id });
 
@@ -48,12 +41,6 @@ module.exports = {
         updatedAt: newTime(),
       });
       await newRating.save();
-
-      const product = await Product.findById(product_id);
-      if (product.tot_rating) {
-        product.tot_rating += Number(rating);
-        await product.save();
-      }
 
       const productRating = await Rating.find({ product_id });
       return res.status(200).json({

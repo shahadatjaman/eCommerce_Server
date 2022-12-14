@@ -40,4 +40,21 @@ module.exports = {
       removedTag,
     });
   },
+  // get rags
+  async getTags(req, res) {
+    const { from, to } = req.params;
+
+    const tags = await Tag.aggregate([
+      {
+        $skip: Number(from),
+      },
+      {
+        $limit: Number(to),
+      },
+    ]);
+
+    res.status(200).json({
+      tags,
+    });
+  },
 };

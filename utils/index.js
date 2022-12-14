@@ -32,4 +32,8 @@ module.exports = {
       trim: true,
     };
   },
+
+  escape(str) {
+    return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+  },
 };
