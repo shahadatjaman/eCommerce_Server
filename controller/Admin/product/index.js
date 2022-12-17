@@ -208,7 +208,13 @@ module.exports = {
 
   // Get product with sorting
   async getProductByCategory(req, res) {
-    const { category_id, minPrice, maxPrice } = req.body;
+    const { category_id, minPrice, maxPrice, queryText } = req.body;
+
+    let name_search_regex = null;
+    if (queryText) {
+      name_search_regex = new RegExp(escape(queryText?.trim()), "i");
+    }
+    console.log(name_search_regex);
     const { from, to } = req.params;
 
     const pipelineOne = [
@@ -219,6 +225,11 @@ module.exports = {
             },
           }
         : { $sort: { name: -1 } },
+      queryText
+        ? {
+            $match: { name: name_search_regex },
+          }
+        : { $skip: Number(from) },
       category_id
         ? {
             $match: {

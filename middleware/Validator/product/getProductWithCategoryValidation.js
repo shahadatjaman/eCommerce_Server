@@ -1,6 +1,11 @@
 const { check, validationResult, param } = require("express-validator");
 
 const productCategoryValidator = [
+  check("queryText")
+    .optional()
+    .notEmpty()
+    .withMessage("queryText must be provid!"),
+
   check("category_id")
     .optional()
     .notEmpty()
