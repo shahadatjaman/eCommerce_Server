@@ -2,51 +2,67 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Types;
 const jwt = require("jsonwebtoken");
 
-module.exports = {
-  objectId(_id) {
+module.exports = (() => {
+  const objectId = (_id) => {
     return _id.toString();
-  },
-  newTime() {
+  };
+  const newTime = () => {
     return new Date().toISOString();
-  },
-  mongooseID() {
+  };
+  const mongooseID = () => {
     return ObjectId();
-  },
-  isValidID({ product_id }) {
+  };
+  const isValidID = ({ product_id }) => {
     if (!product_id) {
       return false;
     } else {
       return ObjectId.isValid(product_id);
     }
-  },
-  isValidMongoID(id) {
+  };
+  const isValidMongoID = (id) => {
     if (!id) {
       return false;
     } else {
       return ObjectId.isValid(id);
     }
-  },
+  };
 
-  requiremnet() {
+  const requiremnet = () => {
     return {
       required: true,
       trim: true,
     };
-  },
+  };
 
-  escape(str) {
+  const escape = (str) => {
     return str?.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
-  },
+  };
   /**
    *
    * @param {Obj} values
-   * @param {"0m"} date
+   * @param {String} SECRET_KEY
+   * @param {"0m"} life
    * @returns
    */
-  tokenGenerate(values, date) {
-    const token = jwt.sign({ ...values }, process.env.SECRET_KEY, {
-      expiresIn: date,
+  const tokenGenerate = (values, SECRET_KEY, life) => {
+    const token = jwt.sign({ ...values }, SECRET_KEY, {
+      expiresIn: life,
     });
     return token;
-  },
-};
+  };
+  const isValidToken = async (token) => {
+    return await jwt.verify(token, process.env.SECRET_KEY);
+  };
+
+  return {
+    objectId,
+    newTime,
+    mongooseID,
+    isValidID,
+    isValidMongoID,
+    requiremnet,
+    escape,
+    tokenGenerate,
+    isValidToken,
+  };
+})();

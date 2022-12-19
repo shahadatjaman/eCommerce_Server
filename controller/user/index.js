@@ -1,4 +1,6 @@
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const asyncHandler = require("express-async-handler");
 
 const createError = require("http-errors");
 
@@ -22,16 +24,35 @@ module.exports = {
 
     const user = await newUser.save();
 
-    const token = tokenGenerate({
+    const payload = {
       _id: user._id,
-      username,
-      email,
-      role: user.role,
+      username: user.username,
+      email: user.email,
+    };
+    const accessToken = tokenGenerate(
+      {
+        ...payload,
+      },
+      process.env.ACCESS_TOKEN_SECRET_KEY,
+      process.env.ACCESS_TOKEN_EXPIRE
+    );
+    const refreshToken = tokenGenerate(
+      {
+        ...payload,
+      },
+      process.env.REFRESH_TOKEN_SECRET_KEY,
+      process.env.REFRESH_TOKEN_EXPIRE
+    );
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 31536000,
     });
 
     return res.status(200).json({
       message: "Successfully created",
-      token,
+      accessToken,
+      refreshToken,
     });
   },
   async addSocialUser(req, res, next) {
@@ -47,29 +68,32 @@ module.exports = {
 
       // If user already exist then create an accesstToken and refreshToken to login user
       if (user) {
-        let { _id, username, email, avatar, role } = user;
+        const payload = {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+        };
 
         const accessToken = tokenGenerate(
           {
-            _id,
-            username,
-            email,
-            avatar,
-            role,
+            ...payload,
           },
+          process.env.ACCESS_TOKEN_SECRET_KEY,
           process.env.ACCESS_TOKEN_EXPIRE
         );
 
         const refreshToken = tokenGenerate(
           {
-            _id,
-            username,
-            email,
-            avatar,
-            role,
+            ...payload,
           },
+          process.env.REFRESH_TOKEN_SECRET_KEY,
           process.env.REFRESH_TOKEN_EXPIRE
         );
+
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          maxAge: 31536000,
+        });
 
         return res.status(200).json({
           message: "Successful",
@@ -112,13 +136,34 @@ module.exports = {
         }
 
         if (isvalid) {
-          const token = tokenGenerate({
+          const payload = {
             _id: user._id,
             username: user.username,
             email: user.email,
+          };
+          const accessToken = tokenGenerate(
+            {
+              ...payload,
+            },
+            process.env.ACCESS_TOKEN_SECRET_KEY,
+            process.env.ACCESS_TOKEN_EXPIRE
+          );
+          const refreshToken = tokenGenerate(
+            {
+              ...payload,
+            },
+            process.env.REFRESH_TOKEN_SECRET_KEY,
+            process.env.REFRESH_TOKEN_EXPIRE
+          );
+
+          res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            maxAge: 31536000,
           });
+
           return res.status(200).json({
-            token,
+            accessToken,
+            refreshToken,
           });
         } else {
           return res.status(400).json({
@@ -144,5 +189,43 @@ module.exports = {
     res.status(200).json({
       user,
     });
+  },
+  async getAccessToken(req, res) {
+    const { refreshToken } = req.cookies;
+    console.log("refreshToken", refreshToken);
+
+    if (!refreshToken) return res.status(401).json({ message: "Unauthorized" });
+
+    jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET_KEY,
+      asyncHandler(async (err, decoded) => {
+        if (err) return res.status(403).json({ message: "Forbidden" });
+
+        const foundUser = await User.findOne({
+          _id: decoded._id,
+        }).exec();
+
+        if (!foundUser)
+          return res.status(401).json({ message: "Unauthorized" });
+
+        const payload = {
+          _id: foundUser._id,
+          username: foundUser.username,
+          email: foundUser.email,
+        };
+        const accessToken = tokenGenerate(
+          {
+            ...payload,
+          },
+          process.env.ACCESS_TOKEN_SECRET_KEY,
+          process.env.ACCESS_TOKEN_EXPIRE
+        );
+
+        res.status(200).json({
+          accessToken,
+        });
+      })
+    );
   },
 };

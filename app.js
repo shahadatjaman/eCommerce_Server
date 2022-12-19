@@ -3,12 +3,18 @@ const app = express();
 const { createServer } = require("http");
 const httpServer = createServer(app);
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const { mongoose } = require("mongoose");
 const cors = require("cors");
 const passport = require("passport");
 const commonMiddleware = require("./middleware/Validator/common/commonMid");
 
-app.use(cors());
+require("dotenv").config({
+  path: "./.env",
+});
+
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cookieParser());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -17,8 +23,6 @@ app.use(bodyParser.json());
 
 app.use(passport.initialize());
 require("./passport")(passport);
-
-require("dotenv").config();
 
 const PORT = 5000;
 

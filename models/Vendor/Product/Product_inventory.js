@@ -1,7 +1,5 @@
 const { Schema, model, Decimal128 } = require("mongoose");
-const { requiremnet } = require("../../../utils");
-
-const { ObjectId } = Schema.Types;
+const { requiremnet } = require("../../../utils/index");
 
 const inventorySchema = new Schema({
   product_id: {
@@ -10,11 +8,11 @@ const inventorySchema = new Schema({
   },
   quantity: {
     type: String,
-    ...requiremnet(),
+    ...requiremnet,
   },
   weight: {
     type: Decimal128,
-    ...requiremnet(),
+    ...requiremnet,
   },
 });
 

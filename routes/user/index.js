@@ -1,10 +1,12 @@
 const router = require("express").Router();
 const authchecker = require("../../authChecker");
+
 const {
   addCustomUser,
   addSocialUser,
   login,
   getUser,
+  getAccessToken,
 } = require("../../controller/user/");
 const {
   userAddress,
@@ -44,5 +46,8 @@ router.get(
   getUser
 );
 router.post("/login", loginValidator, loginValidatorHandler, login);
+
+// Testing router
+router.get("/refreshtoken", getAccessToken);
 
 module.exports = router;
