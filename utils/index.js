@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Types;
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   objectId(_id) {
@@ -35,5 +36,17 @@ module.exports = {
 
   escape(str) {
     return str?.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+  },
+  /**
+   *
+   * @param {Obj} values
+   * @param {"0m"} date
+   * @returns
+   */
+  tokenGenerate(values, date) {
+    const token = jwt.sign({ ...values }, process.env.SECRET_KEY, {
+      expiresIn: date,
+    });
+    return token;
   },
 };
