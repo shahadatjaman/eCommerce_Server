@@ -4,7 +4,12 @@ const User = require("../../../models/User/User");
 
 // Express validation
 const loginValidator = [
-  check("username").trim().notEmpty().withMessage("username is required!"),
+  check("email")
+    .trim()
+    .notEmpty()
+    .withMessage("Email is required!")
+    .isEmail()
+    .withMessage("Enter a valid email!"),
 
   check("password").notEmpty().withMessage("Password is required!"),
 ];

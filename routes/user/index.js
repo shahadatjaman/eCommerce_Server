@@ -21,19 +21,31 @@ const {
   loginValidatorHandler,
   loginValidator,
 } = require("../../middleware/Validator/user/loginValidation");
+const {
+  addUserBySocialValidators,
+  addUserBySocialValidatorHandler,
+} = require("../../middleware/Validator/user/socialUser");
 
 const {
   addUserValidators,
   addUserValidatorHandler,
 } = require("../../middleware/Validator/user/userValidator");
 
-// Add user
+// Create account by user
 router.post(
   "/register",
   addUserValidators,
   addUserValidatorHandler,
-  addSocialUser,
+  // addSocialUser,
   addCustomUser
+);
+
+// Create account by socil media
+router.post(
+  "/adduserbysocial",
+  addUserBySocialValidators,
+  addUserBySocialValidatorHandler,
+  addSocialUser
 );
 
 router.post("/useraddress", authchecker, userAddress);

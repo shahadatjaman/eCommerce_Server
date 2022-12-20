@@ -3,8 +3,9 @@ const createError = require("http-errors");
 const User = require("../../../models/User/User");
 
 // Express validation
-const addUserValidators = [
-  check("username").notEmpty().withMessage("Username is required!").trim(),
+const addUserBySocialValidators = [
+  check("username").notEmpty().withMessage("Username is required!"),
+
   check("email")
     .trim()
     .notEmpty()
@@ -15,26 +16,16 @@ const addUserValidators = [
       try {
         const user = await User.findOne({ email: value });
 
-        if (user && user.provider !== "user") {
-          throw createError(`Your account created with Google/Facebook!`);
-        }
-
-        if (user) {
-          throw createError(`Your Email already used.`);
+        if (user && user.provider === "user") {
+          throw createError(`Please login with username and password!`);
         }
       } catch (error) {
         throw createError(error.message);
       }
     }),
-
-  check("password")
-    .isStrongPassword()
-    .withMessage(
-      "Password must be at least 8 and should contain at least 1 lowercase, 1 upperCase, 1 number and 1 symbol!"
-    ),
 ];
 
-const addUserValidatorHandler = (req, res, next) => {
+const addUserBySocialValidatorHandler = (req, res, next) => {
   const errors = validationResult(req);
   const mappedErrors = errors.mapped();
 
@@ -48,6 +39,6 @@ const addUserValidatorHandler = (req, res, next) => {
 };
 
 module.exports = {
-  addUserValidators,
-  addUserValidatorHandler,
+  addUserBySocialValidators,
+  addUserBySocialValidatorHandler,
 };

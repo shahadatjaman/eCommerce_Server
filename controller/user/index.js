@@ -14,11 +14,13 @@ module.exports = {
     let { username, email, password } = req.body;
 
     password = await bcrypt.hash(password, 10);
+
     const newUser = new User({
       username,
       email,
       password,
       avatar: "",
+      provider: "user",
       createdAt: new Date().toISOString(),
     });
 
@@ -28,6 +30,7 @@ module.exports = {
       _id: user._id,
       username: user.username,
       email: user.email,
+      provider: newUser.provider,
     };
     const accessToken = tokenGenerate(
       {
@@ -55,123 +58,148 @@ module.exports = {
       refreshToken,
     });
   },
-  async addSocialUser(req, res, next) {
-    let { username, email, password, avatar } = req.body;
+  async addSocialUser(req, res) {
+    let { username, email, avatar } = req.body;
 
-    // If has password that's means, it's a custom sign up. Otherwase sign up by others(social account)
-    if (password) {
-      next();
-    } else {
-      const user = await User.findOne({
-        email,
+    const user = await User.findOne({
+      email,
+    });
+
+    // If user already exist then create an accesstToken and refreshToken to login user
+    if (user) {
+      const payload = {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        provider: user.provider,
+      };
+
+      const accessToken = tokenGenerate(
+        {
+          ...payload,
+        },
+        process.env.ACCESS_TOKEN_SECRET_KEY,
+        process.env.ACCESS_TOKEN_EXPIRE
+      );
+
+      const refreshToken = tokenGenerate(
+        {
+          ...payload,
+        },
+        process.env.REFRESH_TOKEN_SECRET_KEY,
+        process.env.REFRESH_TOKEN_EXPIRE
+      );
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 31536000,
       });
 
-      // If user already exist then create an accesstToken and refreshToken to login user
-      if (user) {
-        const payload = {
-          _id: user._id,
-          username: user.username,
-          email: user.email,
-        };
+      return res.status(200).json({
+        message: "Successful",
+        accessToken,
+        refreshToken,
+      });
+    } else {
+      const newUser = new User({
+        username,
+        email,
+        avatar,
+        provider: "social ",
+        createdAt: new Date().toISOString(),
+      });
 
-        const accessToken = tokenGenerate(
-          {
-            ...payload,
-          },
-          process.env.ACCESS_TOKEN_SECRET_KEY,
-          process.env.ACCESS_TOKEN_EXPIRE
-        );
+      const { _id, role, provider } = await newUser.save();
 
-        const refreshToken = tokenGenerate(
-          {
-            ...payload,
-          },
-          process.env.REFRESH_TOKEN_SECRET_KEY,
-          process.env.REFRESH_TOKEN_EXPIRE
-        );
+      const payload = {
+        _id,
+        username,
+        email,
+        avatar,
+        provider,
+        role,
+      };
+      const accessToken = tokenGenerate(
+        {
+          ...payload,
+        },
+        process.env.ACCESS_TOKEN_SECRET_KEY,
+        process.env.ACCESS_TOKEN_EXPIRE
+      );
 
-        res.cookie("refreshToken", refreshToken, {
-          httpOnly: true,
-          maxAge: 31536000,
-        });
+      const refreshToken = tokenGenerate(
+        {
+          ...payload,
+        },
+        process.env.REFRESH_TOKEN_SECRET_KEY,
+        process.env.REFRESH_TOKEN_EXPIRE
+      );
 
-        return res.status(200).json({
-          message: "Successful",
-          accessToken,
-          refreshToken,
-        });
-      } else {
-        const newUser = new User({
-          username,
-          email,
-          avatar,
-          createdAt: new Date().toISOString(),
-        });
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 31536000,
+      });
 
-        const { _id, role } = await newUser.save();
-
-        const token = tokenGenerate({
-          _id,
-          username,
-          email,
-          avatar,
-          role,
-        });
-
-        return res.status(200).json({
-          message: "Successfully created",
-          token,
-        });
-      }
+      return res.status(200).json({
+        message: "Successfully created",
+        accessToken,
+        refreshToken,
+      });
     }
   },
   async login(req, res) {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
 
     if (user) {
-      bcrypt.compare(password, user.password, (err, isvalid) => {
-        if (err) {
-          throw createError(err);
-        }
+      if (user.provider === "user") {
+        bcrypt.compare(password, user.password, (err, isvalid) => {
+          if (err) {
+            throw createError(err);
+          }
 
-        if (isvalid) {
-          const payload = {
-            _id: user._id,
-            username: user.username,
-            email: user.email,
-          };
-          const accessToken = tokenGenerate(
-            {
-              ...payload,
-            },
-            process.env.ACCESS_TOKEN_SECRET_KEY,
-            process.env.ACCESS_TOKEN_EXPIRE
-          );
-          const refreshToken = tokenGenerate(
-            {
-              ...payload,
-            },
-            process.env.REFRESH_TOKEN_SECRET_KEY,
-            process.env.REFRESH_TOKEN_EXPIRE
-          );
+          if (isvalid) {
+            const payload = {
+              _id: user._id,
+              username: user.username,
+              email: user.email,
+            };
+            const accessToken = tokenGenerate(
+              {
+                ...payload,
+              },
+              process.env.ACCESS_TOKEN_SECRET_KEY,
+              process.env.ACCESS_TOKEN_EXPIRE
+            );
+            const refreshToken = tokenGenerate(
+              {
+                ...payload,
+              },
+              process.env.REFRESH_TOKEN_SECRET_KEY,
+              process.env.REFRESH_TOKEN_EXPIRE
+            );
 
-          res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            maxAge: 31536000,
-          });
+            res.cookie("refreshToken", refreshToken, {
+              httpOnly: true,
+              maxAge: 31536000,
+            });
 
-          return res.status(200).json({
-            accessToken,
-            refreshToken,
-          });
-        } else {
-          return res.status(400).json({
-            message: "Your email or password is incorrect",
-            token: null,
-          });
-        }
-      });
+            return res.status(200).json({
+              accessToken,
+              refreshToken,
+            });
+          } else {
+            return res.status(400).json({
+              message: "Your email or password is incorrect",
+              token: null,
+            });
+          }
+        });
+      } else {
+        return res.status(400).json({
+          message: "Your account was created with Google/Facebook",
+        });
+      }
     } else {
       return res.status(401).json({
         errors: {

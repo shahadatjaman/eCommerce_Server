@@ -18,6 +18,10 @@ const userSchema = new Schema({
   password: {
     type: String,
   },
+  provider: {
+    type: String,
+    required: true,
+  },
   role: {
     type: String,
     enum: ["user", "admin", "manager", "staff"],
