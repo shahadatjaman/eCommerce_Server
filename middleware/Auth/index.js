@@ -1,7 +1,8 @@
 const passport = require("passport");
+const User = require("../../models/User/User");
 
 module.exports = {
-  async authChecker(req, res, next) {
+  async authAsAdmin(req, res, next) {
     passport.authenticate("jwt", (error, user, info) => {
       if (error) {
         return next(error);
@@ -12,7 +13,7 @@ module.exports = {
         });
       }
 
-      if (user.role !== "vendor") {
+      if (user.role !== "admin") {
         return res.status(401).json({
           message: "Access not allowed",
         });
@@ -23,7 +24,8 @@ module.exports = {
       return next();
     })(req, res, next);
   },
-  async authUser(req, res, next) {
+
+  async authAsUser(req, res, next) {
     passport.authenticate("jwt", (error, user, info) => {
       if (error) {
         return next(error);
@@ -38,5 +40,19 @@ module.exports = {
 
       return next();
     })(req, res, next);
+  },
+};
+
+module.exports = {
+  async authAsUser(req, res, next) {
+    const user = User.findById();
+    if (!user) {
+      return res.status(401).json({
+        message: "Authentication Failed",
+      });
+    }
+
+    req.user = user;
+    return next();
   },
 };

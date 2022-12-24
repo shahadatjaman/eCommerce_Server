@@ -27,6 +27,9 @@ const userSchema = new Schema({
     enum: ["user", "admin", "manager", "staff"],
     default: "user",
   },
+  code: {
+    type: String,
+  },
   createdAt: String,
 });
 

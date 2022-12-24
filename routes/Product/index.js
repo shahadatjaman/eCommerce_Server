@@ -14,7 +14,7 @@ const {
 } = require("../../controller/Admin/product/");
 
 // Authentication checks middleware
-const { authChecker, authUser } = require("../../middleware/Auth/");
+const { authAsAdmin, authAsUser } = require("../../middleware/Auth/");
 
 // Product input validation middleware
 const {
@@ -143,12 +143,12 @@ const {
 } = require("../../middleware/Validator/product/sortedProducts");
 
 // Create a new empty product
-router.get("/createemptyproduct", authChecker, createEmptyProduct);
+router.get("/createemptyproduct", authAsAdmin, createEmptyProduct);
 
 // Create a new product
 router.post(
   "/createproduct",
-  authChecker,
+  authAsAdmin,
   productValidator,
   productValidatorHandler,
   createProduct
@@ -157,7 +157,7 @@ router.post(
 // Create a new product category
 router.post(
   "/createcategory",
-  authChecker,
+  authAsAdmin,
   categoreisValidator,
   categoriesValidatorHandler,
   createCategories
@@ -194,7 +194,7 @@ router.get(
 router.post("/createtag", tagValidator, tagValidatorHandler, createTag);
 
 // Remove tag
-router.post("/romvetag", authChecker, removeTag);
+router.post("/romvetag", authAsAdmin, removeTag);
 
 // Get tags
 router.get(
@@ -207,7 +207,7 @@ router.get(
 // Create share_link
 router.post(
   "/createsharelink",
-  authChecker,
+  authAsAdmin,
   shareLinkValidator,
   shareLinkValidatorHandler,
   createShareLink
@@ -216,31 +216,31 @@ router.post(
 // Product variation
 router.post(
   "/productvariation",
-  authChecker,
+  authAsAdmin,
   variationValidator,
   variationValidatorHandler,
   productVariations
 );
 
 // Remove variation
-router.post("/removevariation", authChecker, removeVariation);
+router.post("/removevariation", authAsAdmin, removeVariation);
 
 // Create Product variation Options
 router.post(
   "/variationoption",
-  authChecker,
+  authAsAdmin,
   variationOptionsValidator,
   variationOptionsValidatorHandler,
   productVariationsOptions
 );
 
 // Delete product variation option
-router.delete("/deleteoption/:option_id", authChecker, deleteOption);
+router.delete("/deleteoption/:option_id", authAsAdmin, deleteOption);
 
 // Create a new discount
 router.post(
   "/creatediscount/:product_id",
-  authChecker,
+  authAsAdmin,
   discountValidation,
   discountValidatorHandler,
   createDiscount
@@ -249,7 +249,7 @@ router.post(
 // Create a inventory
 router.post(
   "/inventory/:product_id",
-  authChecker,
+  authAsAdmin,
   quantityValidation,
   quantityValidatorHandler,
   createInventory
@@ -258,7 +258,7 @@ router.post(
 // Delete a product
 router.delete(
   "/deleteproduct/:product_id",
-  authChecker,
+  authAsAdmin,
   delProductValidator,
   delPorductValidatorHandler,
   deleteProduct
@@ -267,7 +267,7 @@ router.delete(
 // Create Product rating
 router.post(
   "/createrating",
-  authUser,
+  authAsUser,
   ratingValidator,
   ratingValidatorHandler,
   createRating
@@ -275,7 +275,7 @@ router.post(
 // remove rating
 router.delete(
   "/removerating/:product_id",
-  authUser,
+  authAsUser,
   removeRatingValidator,
   removeRatingValidatorHandler,
   removeRating
@@ -287,7 +287,7 @@ router.get("/getratings/:product_id", getRatings);
 // Get rating by user id and product id
 router.get(
   "/getrating/:product_id",
-  authUser,
+  authAsUser,
   getRatingValidator,
   getRatingValidatorHandler,
   getRating
@@ -308,7 +308,7 @@ router.post(
 router.get("/getproduct/:product_id", getProduct);
 
 // Get inventory
-router.get("/getinventory/:product_id", authChecker, getInventory);
+router.get("/getinventory/:product_id", authAsAdmin, getInventory);
 
 // Get product discount
 router.get("/getdiscount/:product_id", getDiscount);
@@ -325,7 +325,7 @@ router.get(
 );
 
 // Get variation options
-router.get("/getoptions/:variation_id", authChecker, getOptions);
+router.get("/getoptions/:variation_id", authAsAdmin, getOptions);
 
 router.get(
   "/getproducts/:from-:to",

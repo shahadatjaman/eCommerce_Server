@@ -24,8 +24,9 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 require("./passport")(passport);
 
-const PORT = 5000;
+const PORT = 8000;
 
+app.use("/admin", require("./routes/Admin/"));
 app.use("/auth", require("./routes/user"));
 app.use("/vendor", require("./routes/Product/"));
 app.use("/v2", require("./routes/Order/index"));

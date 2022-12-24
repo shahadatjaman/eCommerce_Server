@@ -105,7 +105,7 @@ module.exports = {
 
   // Get all products
   async getProducts(req, res) {
-    const products = await Product.find({ isValid: true }).limit(13);
+    const products = await Product.find({ isValid: true });
 
     res.status(200).json({
       products,

@@ -1,5 +1,10 @@
 const router = require("express").Router();
-const authchecker = require("../../authChecker");
+const { authAsUser } = require("../../middleware/Auth/");
+
+const {
+  passwordlValidator,
+  passwordValidatorHandler,
+} = require("../../middleware/Validator/user/passwordVali");
 
 const {
   addCustomUser,
@@ -7,11 +12,21 @@ const {
   login,
   getUser,
   getAccessToken,
+  forgetPassword,
+  verifyCode,
+  checkCodeValidity,
+  changePassword,
+  createNewPassword,
+  removeUserAccount,
 } = require("../../controller/user/");
 const {
   userAddress,
   getUserAddress,
 } = require("../../controller/user/userAddress");
+const {
+  emailValidator,
+  emailValidatorHandler,
+} = require("../../middleware/Validator/user/forgetPassword");
 const {
   getUserValidator,
   getUserValidatorHandler,
@@ -30,6 +45,18 @@ const {
   addUserValidators,
   addUserValidatorHandler,
 } = require("../../middleware/Validator/user/userValidator");
+const {
+  verifylValidator,
+  verifyValidatorHandler,
+} = require("../../middleware/Validator/user/verifyCode");
+const {
+  usernameValidator,
+  usernameValidatorHandler,
+} = require("../../middleware/Validator/user/usernameValidation");
+const {
+  validPassword,
+  validPasswordHandler,
+} = require("../../middleware/Validator/user/validPassword");
 
 // Create account by user
 router.post(
@@ -48,9 +75,9 @@ router.post(
   addSocialUser
 );
 
-router.post("/useraddress", authchecker, userAddress);
+router.post("/useraddress", authAsUser, userAddress);
 
-router.get("/getuseraddress", authchecker, getUserAddress);
+router.get("/getuseraddress", authAsUser, getUserAddress);
 router.get(
   "/getuser/:user_id",
   getUserValidator,
@@ -61,5 +88,55 @@ router.post("/login", loginValidator, loginValidatorHandler, login);
 
 // Testing router
 router.get("/refreshtoken", getAccessToken);
+
+// Forget password
+router.get(
+  "/forget/:email",
+  emailValidator,
+  emailValidatorHandler,
+  forgetPassword
+);
+
+// Check verification code
+router.post(
+  "/verifycode/:email",
+  verifylValidator,
+  verifyValidatorHandler,
+  verifyCode
+);
+// Check verication token validity
+router.get(
+  "/checkvalidity/:email",
+  emailValidator,
+  emailValidatorHandler,
+  checkCodeValidity
+);
+
+// ChangePassword
+router.post(
+  "/change_password",
+  authAsUser,
+  passwordlValidator,
+  passwordValidatorHandler,
+  changePassword
+);
+
+// Delete user Account
+router.post(
+  "/delete_user_account",
+  authAsUser,
+  usernameValidator,
+  usernameValidatorHandler,
+  removeUserAccount
+);
+
+// Create new password
+router.post(
+  "/new_password",
+  authAsUser,
+  validPassword,
+  validPasswordHandler,
+  createNewPassword
+);
 
 module.exports = router;

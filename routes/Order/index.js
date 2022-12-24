@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { authUser } = require("../../middleware/Auth/");
+const { authAsUser } = require("../../middleware/Auth/");
 
 const {
   creareOrder,
@@ -13,16 +13,16 @@ const {
 
 router.post(
   "/createorder",
-  authUser,
+  authAsUser,
   orderValidation,
   orderValidatorHandler,
   creareOrder
 );
 
 // Get order by _id
-router.get("/getorder/:order_id", authUser, getOrder);
+router.get("/getorder/:order_id", authAsUser, getOrder);
 
 // Get Orders
-router.get("/getorders", authUser, getOrders);
+router.get("/getorders", authAsUser, getOrders);
 
 module.exports = router;
