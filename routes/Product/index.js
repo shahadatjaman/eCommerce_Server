@@ -102,6 +102,7 @@ const {
   getVariants,
   getvariation,
   getOptions,
+  createVariation,
 } = require("../../controller/Admin/product/variation");
 const {
   inventory,
@@ -112,6 +113,8 @@ const {
   createCategories,
   getCategories,
   getCategory,
+  createSubCategory,
+  getSubCategory,
 } = require("../../controller/Admin/product/category");
 const {
   getCategoryValidator,
@@ -141,6 +144,14 @@ const {
   getSortedValidator,
   getSortedValidatorHandler,
 } = require("../../middleware/Validator/product/sortedProducts");
+const {
+  subCategoreisValidator,
+  subCategoriesValidatorHandler,
+} = require("../../middleware/Validator/categories/sub_category_validation");
+const {
+  get_sub_categoreisValidator,
+  get_sub_categoriesValidatorHandler,
+} = require("../../middleware/Validator/categories/get_sub_cate_validation");
 
 // Create a new empty product
 router.get("/createemptyproduct", authAsAdmin, createEmptyProduct);
@@ -161,6 +172,24 @@ router.post(
   categoreisValidator,
   categoriesValidatorHandler,
   createCategories
+);
+
+// Create sub categories
+router.post(
+  "/create_sub_category",
+  authAsAdmin,
+  subCategoreisValidator,
+  subCategoriesValidatorHandler,
+  createSubCategory
+);
+
+// Get sub categories by paren category id
+router.get(
+  "/get_sub_category/:parent_id",
+  authAsAdmin,
+  get_sub_categoreisValidator,
+  get_sub_categoriesValidatorHandler,
+  getSubCategory
 );
 
 // Get product by text
@@ -213,13 +242,22 @@ router.post(
   createShareLink
 );
 
-// Product variation
+//Create Product variation with URL
 router.post(
   "/productvariation",
   authAsAdmin,
   variationValidator,
   variationValidatorHandler,
   productVariations
+);
+
+//Create Product variation with Cloudinay and Multer
+router.post(
+  "/variation_img",
+  authAsAdmin,
+  variationValidator,
+  variationValidatorHandler,
+  createVariation
 );
 
 // Remove variation

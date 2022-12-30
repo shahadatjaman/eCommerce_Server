@@ -28,6 +28,7 @@ module.exports = {
       SKU: "_",
       tot_rating: 0,
       category_id: "_",
+      sub_category_id: "_",
       isValid: false,
       createdAt: newTime(),
       updatedAt: newTime(),

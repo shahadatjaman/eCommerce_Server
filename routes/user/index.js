@@ -18,6 +18,7 @@ const {
   changePassword,
   createNewPassword,
   removeUserAccount,
+  uploadUserAvatar,
 } = require("../../controller/user/");
 const {
   userAddress,
@@ -57,13 +58,13 @@ const {
   validPassword,
   validPasswordHandler,
 } = require("../../middleware/Validator/user/validPassword");
+const upload = require("../../utils/multer");
 
 // Create account by user
 router.post(
   "/register",
   addUserValidators,
   addUserValidatorHandler,
-  // addSocialUser,
   addCustomUser
 );
 
@@ -137,6 +138,14 @@ router.post(
   validPassword,
   validPasswordHandler,
   createNewPassword
+);
+
+// Upload file
+router.post(
+  "/upload_avatar",
+  authAsUser,
+  upload.single("image"),
+  uploadUserAvatar
 );
 
 module.exports = router;

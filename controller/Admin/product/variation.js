@@ -8,7 +8,7 @@ const Rating = require("../../../models/Vendor/Product/Rating");
 const Discount = require("../../../models/Vendor/Product/Discount");
 
 module.exports = {
-  // Product variation
+  //Create Product variation
   async productVariations(req, res) {
     let { product_id, variation_img } = req.body;
 
@@ -24,6 +24,9 @@ module.exports = {
       variation,
     });
   },
+
+  // Create product variation with cloudinary and multer
+  async createVariation(req, res) {},
   // get Product variants
   async getVariants(req, res) {
     const { product_id } = req.params;

@@ -2,6 +2,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
+    "cloudinary": "^1.33.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.2",
@@ -11,6 +12,7 @@
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.6.2",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",
     "passport": "^0.6.0",
@@ -22,10 +24,23 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "lint": "yarn add -D prettier && yarn add -D babel-eslint && npx install-peerdeps --dev eslint-config-airbnb && yarn add -D eslint-config-prettier eslint-plugin-prettier"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "8.2.0",
+    "eslint-config-airbnb": "19.0.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "2.25.3",
+    "eslint-plugin-jsx-a11y": "6.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "7.28.0",
+    "eslint-plugin-react-hooks": "4.3.0",
+    "prettier": "^2.8.1"
+  }
 }

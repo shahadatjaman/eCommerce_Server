@@ -8,6 +8,7 @@ const { mongoose } = require("mongoose");
 const cors = require("cors");
 const passport = require("passport");
 const commonMiddleware = require("./middleware/Validator/common/commonMid");
+const { error } = require("console");
 
 require("dotenv").config({
   path: "./.env",
@@ -28,10 +29,24 @@ const PORT = 8000;
 
 app.use("/admin", require("./routes/Admin/"));
 app.use("/auth", require("./routes/user"));
-app.use("/vendor", require("./routes/Product/"));
+app.use("/v1", require("./routes/Product/"));
 app.use("/v2", require("./routes/Order/index"));
 app.use(commonMiddleware);
 
+// default error handler
+app.use((err, req, res, next) => {
+  if (err) {
+    if (err instanceof multer.MulterError) {
+      return res.status(500).send("There was an upload error!");
+    } else {
+      return res.status(500).send(err.message);
+    }
+  } else {
+    next();
+  }
+});
+
+mongoose.set("strictQuery", false);
 mongoose.connect(process.env.DB_URL).then(() => {
   console.log("MongoDB Connected...");
   httpServer.listen({ port: process.env.PORT || PORT });

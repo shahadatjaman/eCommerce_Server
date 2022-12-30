@@ -4,7 +4,8 @@ const User = require("../../../models/User/User");
 
 // Express validation
 const addUserValidators = [
-  check("username").notEmpty().withMessage("Username is required!").trim(),
+  check("firstName").trim().notEmpty().withMessage("First name is required!"),
+  check("lastName").trim().notEmpty().withMessage("Last name is required!"),
   check("email")
     .trim()
     .notEmpty()
@@ -28,6 +29,8 @@ const addUserValidators = [
     }),
 
   check("password")
+    .notEmpty()
+    .withMessage("Password is required")
     .isStrongPassword()
     .withMessage(
       "Password must be at least 8 and should contain at least 1 lowercase, 1 upperCase, 1 number and 1 symbol!"

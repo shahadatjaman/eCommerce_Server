@@ -1,4 +1,6 @@
 const { param, validationResult } = require("express-validator");
+const createHttpError = require("http-errors");
+const User = require("../../../models/User/User");
 
 const emailValidator = [
   param("email")

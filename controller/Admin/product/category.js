@@ -1,4 +1,6 @@
 const Categories = require("../../../models/Vendor/Product/Categories");
+const Sub_category = require("../../../models/Vendor/Product/Sub_category");
+const { serverError } = require("../../../utils/error");
 
 module.exports = {
   // Porduct category
@@ -42,5 +44,42 @@ module.exports = {
     res.status(200).json({
       category,
     });
+  },
+
+  // Create sub category
+  async createSubCategory(req, res) {
+    const { parent_category_id, sub_category_name } = req.body;
+
+    const sub_cate = new Sub_category({
+      parent_category_id,
+      sub_category_name,
+    });
+
+    const new_sub_category = await sub_cate.save();
+
+    if (new_sub_category) {
+      return res.status(200).json({
+        new_sub_category,
+      });
+    } else {
+      return serverError(res, "There was an server error!");
+    }
+  },
+  // Get sub categories by parent category id
+  async getSubCategory(req, res) {
+    const { parent_id } = req.params;
+
+    const sub_category = await Sub_category.find({
+      parent_category_id: parent_id,
+    });
+
+    if (sub_category) {
+      return res.status(200).json({
+        status: "200",
+        sub_category,
+      });
+    } else {
+      return serverError(res, "There was an server error!");
+    }
   },
 };

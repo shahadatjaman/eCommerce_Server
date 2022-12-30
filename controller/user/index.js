@@ -14,14 +14,17 @@ const htmlUI = require("./html");
 
 const sendEmail = require("../../utils/sendEmail");
 
+const cloudinary = require("../../utils/cloudinaryConfg");
+
 module.exports = {
   async addCustomUser(req, res) {
-    let { username, email, password } = req.body;
+    let { firstName, lastName, email, password } = req.body;
 
     password = await bcrypt.hash(password, 10);
 
     const newUser = new User({
-      username,
+      firstName,
+      lastName,
       email,
       password,
       avatar: "",
@@ -34,7 +37,8 @@ module.exports = {
 
     const payload = {
       _id: user._id,
-      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       provider: newUser.provider,
     };
@@ -65,7 +69,7 @@ module.exports = {
     });
   },
   async addSocialUser(req, res) {
-    let { username, email, avatar } = req.body;
+    let { firstName, lastName, email, avatar } = req.body;
 
     const user = await User.findOne({
       email,
@@ -75,7 +79,8 @@ module.exports = {
     if (user) {
       const payload = {
         _id: user._id,
-        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         provider: user.provider,
       };
@@ -108,7 +113,8 @@ module.exports = {
       });
     } else {
       const newUser = new User({
-        username,
+        firstName,
+        lastName,
         email,
         avatar,
         provider: "social ",
@@ -119,7 +125,8 @@ module.exports = {
 
       const payload = {
         _id,
-        username,
+        firstName,
+        lastName,
         email,
         avatar,
         provider,
@@ -167,7 +174,8 @@ module.exports = {
           if (isvalid) {
             const payload = {
               _id: user._id,
-              username: user.username,
+              firstName: user.firstName,
+              lastName: user.lastName,
               email: user.email,
             };
             const accessToken = tokenGenerate(
@@ -207,10 +215,9 @@ module.exports = {
         });
       }
     } else {
-      return res.status(401).json({
-        errors: {
-          message: "Invalid User",
-        },
+      return res.status(400).json({
+        message: "Invalid User",
+        status: 400,
       });
     }
   },
@@ -268,10 +275,19 @@ module.exports = {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({
+      return res.status(200).json({
         message: "Invlid Email Address, Please Try another wasy.",
+        status: 400,
       });
     } else {
+      if (user.provider !== "user") {
+        return res.status(200).json({
+          message:
+            "Your account hass been created with social media, please try with them.",
+          status: 400,
+        });
+      }
+
       const randomCode = randomstring.generate({
         length: 10,
         charset: "alphabetic",
@@ -300,6 +316,7 @@ module.exports = {
             new: true,
           }
         );
+
         if (updatedUser) {
           return res.status(200).json({
             message: "Verification code send, Check your gmail!",
@@ -526,14 +543,14 @@ module.exports = {
 
   // Remove user account
   async removeUserAccount(req, res) {
-    const { username } = req.body;
+    const { email } = req.body;
     const { _id } = req.user;
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({
-        message: "Invlid username",
+        message: "Invlid email address",
         status: 400,
       });
     }
@@ -548,5 +565,33 @@ module.exports = {
     } else {
       return serverError(res, "There was aan server error!");
     }
+  },
+
+  // Upload avatar
+  async uploadUserAvatar(req, res) {
+    const { _id } = req.user;
+    const file = req.file;
+    cloudinary.v2.uploader.upload(file.path, async (error, result) => {
+      if (error) {
+        // handle error
+        return res.status(400).send(error);
+      }
+      // result contains the uploaded image details
+
+      try {
+        const user = await User.findByIdAndUpdate(
+          _id,
+          { avatar: result.secure_url },
+          { new: true }
+        );
+
+        return res.status(200).json({
+          status: 200,
+          avatar: user.avatar,
+        });
+      } catch (error) {
+        return serverError(res, "There was an server error!");
+      }
+    });
   },
 };

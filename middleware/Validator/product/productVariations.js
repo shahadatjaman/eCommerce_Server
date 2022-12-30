@@ -2,11 +2,13 @@ const { check, validationResult } = require("express-validator");
 
 const variationValidator = [
   check("product_id")
+    .notEmpty()
+    .withMessage("Poroduct id must be provide")
     .isMongoId()
     .withMessage("Product id should be valid!")
     .trim(),
   check("variation_img")
-    .isLength({ min: 1 })
+    .notEmpty()
     .withMessage("Variation img is required!")
     .trim(),
 ];

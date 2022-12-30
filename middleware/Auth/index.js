@@ -42,17 +42,3 @@ module.exports = {
     })(req, res, next);
   },
 };
-
-module.exports = {
-  async authAsUser(req, res, next) {
-    const user = User.findById();
-    if (!user) {
-      return res.status(401).json({
-        message: "Authentication Failed",
-      });
-    }
-
-    req.user = user;
-    return next();
-  },
-};

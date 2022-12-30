@@ -9,7 +9,6 @@ const nodemailer = require("nodemailer");
  */
 
 module.exports = async (email, subject, ui) => {
-  console.log(process.env.AUTH_PASS);
   try {
     const transporter = nodemailer.createTransport({
       service: process.env.SERVICE,

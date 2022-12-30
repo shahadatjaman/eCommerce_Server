@@ -47,6 +47,11 @@ const productSchema = new Schema({
     required: true,
     trim: true,
   },
+  sub_category_id: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   product_type: {
     type: String,
     required: true,

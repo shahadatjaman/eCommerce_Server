@@ -2,12 +2,12 @@ const { check, validationResult, param } = require("express-validator");
 
 // Express validation
 const usernameValidator = [
-  check("username")
+  check("email")
     .trim()
     .notEmpty()
-    .withMessage("username  must be provid!")
+    .withMessage("Email  must be provid!")
     .isString()
-    .withMessage("usernamed must be string!"),
+    .withMessage("Email must be string!"),
 ];
 
 const usernameValidatorHandler = (req, res, next) => {

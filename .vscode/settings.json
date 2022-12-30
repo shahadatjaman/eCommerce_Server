@@ -1,8 +1,9 @@
 {
+    // Theme
+  "workbench.colorTheme": "GitHub Dark Colorblind (Beta)",
+  "editor.formatOnSave": true,
+  "[javascript]": {
     "editor.formatOnSave": true,
-    "[javascript]": {
-      "editor.formatOnSave": true,
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
-  
+}

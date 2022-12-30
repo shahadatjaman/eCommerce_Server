@@ -4,7 +4,8 @@ const User = require("../../../models/User/User");
 
 // Express validation
 const addUserBySocialValidators = [
-  check("username").notEmpty().withMessage("Username is required!"),
+  check("firstName").notEmpty().withMessage("firstName is required!"),
+  check("lastName").notEmpty().withMessage("lastName is required!"),
 
   check("email")
     .trim()

@@ -2,11 +2,11 @@ const { check, validationResult } = require("express-validator");
 
 const categoreisValidator = [
   check("category_name")
-    .isLength({ min: 1 })
+    .notEmpty()
     .withMessage("Product categiry name is required!")
     .trim(),
   check("icon_name")
-    .isLength({ min: 1 })
+    .notEmpty()
     .withMessage("Icon name(URL) is required!")
     .trim(),
 ];
