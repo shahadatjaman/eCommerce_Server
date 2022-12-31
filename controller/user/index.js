@@ -412,9 +412,9 @@ module.exports = {
       jwt.verify(
         JSON.parse(user.code),
         process.env.VERIFY_CODE_SECRET_KEY,
-        function (err, decoded) {
+        (err, decoded) => {
           if (err) {
-            return res.status(400).json({
+            return res.status(200).json({
               error: "Invalid code",
               status: 400,
             });
