@@ -14,7 +14,13 @@ require("dotenv").config({
   path: "./.env",
 });
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(
+  cors({
+    // origin: "http://localhost:3000",
+    origin: "http://localhost:3001",
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -9,6 +9,9 @@ const Product_variations_options = require("../../../models/Vendor/Product/Produ
 const Discount = require("../../../models/Vendor/Product/Discount");
 const ProductInventory = require("../../../models/Vendor/Product/Product_inventory");
 const Rating = require("../../../models/Vendor/Product/Rating");
+const cloudinary = require("../../../utils/cloudinaryConfg");
+
+const { serverError, clientError } = require("../../../utils/error");
 
 module.exports = {
   // Create initial product

@@ -12,6 +12,7 @@ const {
   getProductsText,
   getSortedProducts,
 } = require("../../controller/Admin/product/");
+const opload = require("../../utils/multer");
 
 // Authentication checks middleware
 const { authAsAdmin, authAsUser } = require("../../middleware/Auth/");
@@ -102,7 +103,7 @@ const {
   getVariants,
   getvariation,
   getOptions,
-  createVariation,
+  upload_variation,
 } = require("../../controller/Admin/product/variation");
 const {
   inventory,
@@ -251,13 +252,14 @@ router.post(
   productVariations
 );
 
-//Create Product variation with Cloudinay and Multer
+// //Create Product variation with Cloudinay and Multer
 router.post(
-  "/variation_img",
+  "/upload_file_variation/:product_id",
   authAsAdmin,
-  variationValidator,
-  variationValidatorHandler,
-  createVariation
+  productIdValidator,
+  productIdValidatorHandler,
+  opload.single("image"),
+  upload_variation
 );
 
 // Remove variation

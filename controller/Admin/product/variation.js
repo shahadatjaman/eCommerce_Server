@@ -7,6 +7,10 @@ const { isValidID, newTime } = require("../../../utils");
 const Rating = require("../../../models/Vendor/Product/Rating");
 const Discount = require("../../../models/Vendor/Product/Discount");
 
+const cloudinary = require("../../../utils/cloudinaryConfg");
+
+const { serverError, clientError } = require("../../../utils/error");
+
 module.exports = {
   //Create Product variation
   async productVariations(req, res) {
@@ -25,8 +29,6 @@ module.exports = {
     });
   },
 
-  // Create product variation with cloudinary and multer
-  async createVariation(req, res) {},
   // get Product variants
   async getVariants(req, res) {
     const { product_id } = req.params;
@@ -76,6 +78,48 @@ module.exports = {
       discount,
     });
   },
+
+  // Create product variation with cloudinary and multer
+  async upload_variation(req, res) {
+    const { product_id } = req.params;
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({
+        error: "Variation image is required!",
+      });
+    }
+
+    cloudinary.v2.uploader.upload(file.path, async (error, result) => {
+      if (error) {
+        // handle error
+        return res.status(400).send(error);
+      }
+      // result contains the uploaded image details
+
+      const new_variation = new ProductVariation({
+        product_id: product_id,
+        variation_img: result.secure_url,
+      });
+
+      try {
+        const variation = await new_variation.save();
+        return res.status(200).json({
+          message: "Product variants saved successfully",
+          variation: variation,
+        });
+      } catch (err) {
+        console.log(err);
+        if (err) {
+          return serverError(
+            res,
+            "There was an server error to save variation!"
+          );
+        }
+      }
+    });
+  },
+
   // Remove variants
   async removeVariation(req, res) {
     const { variation_id } = req.body;
