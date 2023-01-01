@@ -272,4 +272,19 @@ module.exports = {
       products,
     });
   },
+  // Get most viewed products
+  async mostViewedProducts(req, res) {
+    const viewedCategory_id = "63ab3e66ba6e5a0fde1ec5fb";
+
+    try {
+      const products = await Product.find({ category_id: viewedCategory_id });
+      if (products) {
+        return res.status(200).json({
+          products,
+        });
+      }
+    } catch (err) {
+      return serverError(res, "There was an server error!");
+    }
+  },
 };

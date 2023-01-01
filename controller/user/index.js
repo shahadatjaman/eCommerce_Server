@@ -251,7 +251,8 @@ module.exports = {
 
         const payload = {
           _id: foundUser._id,
-          username: foundUser.username,
+          firstName: foundUser.firstName,
+          lastName: foundUser.lastName,
           email: foundUser.email,
         };
         const accessToken = tokenGenerate(
@@ -593,5 +594,29 @@ module.exports = {
         return serverError(res, "There was an server error!");
       }
     });
+  },
+
+  // Update user
+  async updateUser(req, res) {
+    const { _id } = req.user;
+
+    try {
+      const user = await User.findByIdAndUpdate(_id, req.body);
+
+      const updatedUser = {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        avatar: user.avatar,
+        email: user.email,
+      };
+
+      return res.status(200).json({
+        message: "User success fully updated!",
+        user: { ...updatedUser },
+      });
+    } catch (err) {
+      return serverError(res, "There was an server error!");
+    }
   },
 };

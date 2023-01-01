@@ -11,6 +11,7 @@ const {
   getProductsByFiltered,
   getProductsText,
   getSortedProducts,
+  mostViewedProducts,
 } = require("../../controller/Admin/product/");
 const opload = require("../../utils/multer");
 
@@ -373,5 +374,8 @@ router.get(
   getProductsValidatorHandler,
   getProductsByFiltered
 );
+
+// Get most viewered products
+router.get("/most_viewed_products", mostViewedProducts);
 
 module.exports = router;
