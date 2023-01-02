@@ -15,6 +15,7 @@ const htmlUI = require("./html");
 const sendEmail = require("../../utils/sendEmail");
 
 const cloudinary = require("../../utils/cloudinaryConfg");
+const SecurityCode = require("../../models/User/SecurityCode");
 
 module.exports = {
   async addCustomUser(req, res) {
@@ -346,7 +347,7 @@ module.exports = {
     jwt.verify(
       JSON.parse(user.code),
       process.env.VERIFY_CODE_SECRET_KEY,
-      function (err, decoded) {
+      async function (err, decoded) {
         if (err) {
           return res.status(400).json({
             error: "Invalid code",
@@ -380,18 +381,67 @@ module.exports = {
             maxAge: 31536000,
           });
 
+          const token = tokenGenerate(
+            {
+              name: "just chacking for url validity",
+            },
+            process.env.PASSWORD_SECURITY_SECRET,
+            "1h"
+          );
+
+          const userSecurity = await SecurityCode.findOne({
+            user_id: user._id,
+          });
+
+          if (userSecurity) {
+            try {
+              await SecurityCode.findOneAndUpdate(
+                {
+                  user_id: user._id,
+                },
+                {
+                  jwtCode: token,
+                  isChangeAblePass: true,
+                },
+                {
+                  new: true,
+                }
+              );
+              return res.status(200).json({
+                message: "Verification success",
+                status: 200,
+                code: decoded.code,
+                accessToken,
+                refreshToken,
+              });
+            } catch (err) {
+              return serverError(res, "There was an server error!");
+            }
+          } else {
+            const new_security = new SecurityCode({
+              user_id: user._id,
+              isChangeAblePass: true,
+              jwtCode: token,
+            });
+            try {
+              await new_security.save();
+              return res.status(200).json({
+                message: "Verification success",
+                status: 200,
+                code: decoded.code,
+                accessToken,
+                refreshToken,
+              });
+            } catch (err) {
+              return serverError(res, "There was an server error!");
+            }
+          }
+        } else {
           return res.status(200).json({
-            message: "Verification success",
-            status: 200,
-            code: decoded.code,
-            accessToken,
-            refreshToken,
+            status: 400,
+            message: "Invalid code!",
           });
         }
-
-        return res.status(200).json({
-          decoded,
-        });
       }
     );
   },
@@ -522,21 +572,57 @@ module.exports = {
 
     new_password = await bcrypt.hash(new_password, 10);
 
-    const updateduser = await User.findByIdAndUpdate(
-      _id,
-      {
-        password: new_password,
-      },
-      {
-        new: true,
-      }
-    );
+    const securityStatus = await SecurityCode.findOne({ user_id: _id });
 
-    if (updateduser) {
-      return res.status(200).json({
-        message: "Password has been changed!",
-        status: 200,
-      });
+    // If already exist or valid jwt code or passwordChangeAbel is true
+
+    if (securityStatus) {
+      jwt.verify(
+        securityStatus.jwtCode,
+        process.PASSWORD_SECURITY_SECRET,
+        async (result, err) => {
+          if (err) {
+            return res.status(400).json({
+              message: "Something went wrong!",
+            });
+          }
+
+          if (!securityStatus.isChangeAblePass) {
+            return res.status(400).json({
+              error: "Invalid URL",
+            });
+          }
+
+          try {
+            // Change password isChangeAblePass is to be false
+            await SecurityCode.findOneAndUpdate(
+              { user_id: _id },
+              { isChangeAblePass: false }
+            );
+
+            try {
+              await User.findByIdAndUpdate(
+                _id,
+                {
+                  password: new_password,
+                },
+                {
+                  new: true,
+                }
+              );
+
+              return res.status(200).json({
+                message: "Password has been changed!",
+                status: 200,
+              });
+            } catch (error) {
+              return serverError(res, "There was an server error!");
+            }
+          } catch (error) {
+            return serverError(res, "There was an server error!");
+          }
+        }
+      );
     } else {
       return serverError(res, "There was an server error!");
     }
@@ -618,5 +704,16 @@ module.exports = {
     } catch (err) {
       return serverError(res, "There was an server error!");
     }
+  },
+
+  // Chech te passeword is change able or not
+  async chechPasswordIsChangeAble(req, res) {
+    const { _id } = req.user;
+
+    const securityStatus = await SecurityCode.findOne({ user_id: _id });
+
+    return res.status(200).json({
+      url_validity: securityStatus.isChangeAblePass || false,
+    });
   },
 };

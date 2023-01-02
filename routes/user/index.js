@@ -20,6 +20,7 @@ const {
   removeUserAccount,
   uploadUserAvatar,
   updateUser,
+  chechPasswordIsChangeAble,
 } = require("../../controller/user/");
 const {
   userAddress,
@@ -144,6 +145,9 @@ router.post(
   validPasswordHandler,
   createNewPassword
 );
+
+// Checking the password changeable or not
+router.get("/isvalid_pass_url", authAsUser, chechPasswordIsChangeAble);
 
 // Upload file
 router.post(
