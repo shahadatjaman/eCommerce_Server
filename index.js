@@ -15,7 +15,7 @@ require("dotenv").config({
 
 app.use(
   cors({
-    origin: "*",
+    origin: "https://mern-e-commerce-beige.vercel.app/",
     credentials: true,
   })
 );
@@ -44,8 +44,6 @@ app.use(commonMiddleware);
 
 // default error handler
 app.use((err, req, res, next) => {
-  res.set("Access-Control-Allow-Origin", "*");
-
   if (err) {
     if (err instanceof multer.MulterError) {
       return res.status(500).send("There was an upload error!");
