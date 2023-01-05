@@ -37,6 +37,11 @@ app.use("/admin", require("./routes/Admin/"));
 app.use("/auth", require("./routes/user"));
 app.use("/v1", require("./routes/Product/"));
 app.use("/v2", require("./routes/Order/index"));
+
+app.get("/", (req, res) => {
+  res.send("Welcome!");
+});
+
 app.use(commonMiddleware);
 
 // default error handler
