@@ -8,7 +8,6 @@ const { mongoose } = require("mongoose");
 const cors = require("cors");
 const passport = require("passport");
 const commonMiddleware = require("./middleware/Validator/common/commonMid");
-const { error } = require("console");
 
 require("dotenv").config({
   path: "./.env",
@@ -16,8 +15,7 @@ require("dotenv").config({
 
 app.use(
   cors({
-    origin: "https://mern-e-commerce-beige.vercel.app/",
-    //origin: "http://localhost:3001",
+    origin: "*",
     credentials: true,
   })
 );
