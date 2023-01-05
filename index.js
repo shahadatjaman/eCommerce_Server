@@ -16,7 +16,7 @@ require("dotenv").config({
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://mern-e-commerce-beige.vercel.app/",
     //origin: "http://localhost:3001",
     credentials: true,
   })
