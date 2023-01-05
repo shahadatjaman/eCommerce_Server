@@ -27,11 +27,7 @@
     "node": "18.x"
   },
   "scripts": {
-    
-    "dev": "node dev",
-    "build": "node build",
-    "start": "node start",
-    "lint": "node lint"
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
