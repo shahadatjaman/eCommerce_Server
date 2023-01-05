@@ -13,12 +13,7 @@ require("dotenv").config({
   path: "./.env",
 });
 
-app.use(
-  cors({
-    origin: "https://mern-e-commerce-beige.vercel.app/",
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use(cookieParser());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
