@@ -27,8 +27,11 @@
     "node": "18.x"
   },
   "scripts": {
-    "dev": "nodemon app.js",
-    "lint": "yarn add -D prettier && yarn add -D babel-eslint && npx install-peerdeps --dev eslint-config-airbnb && yarn add -D eslint-config-prettier eslint-plugin-prettier"
+    
+    "dev": "node dev",
+    "build": "node build",
+    "start": "node start",
+    "lint": "node lint"
   },
   "keywords": [],
   "author": "",
