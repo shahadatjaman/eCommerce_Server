@@ -14,7 +14,11 @@ require("dotenv").config({
 });
 
 var corsOptions = {
-  origin: ["http://localhost:3000", "https://mern-ecommerce23.vercel.app"],
+  origin: [
+    "http://localhost:3000",
+    "https://mern-ecommerce23.vercel.app",
+    "https://mern-ecommerce23-abuhuraira24.vercel.app/",
+  ],
   optionsSuccessStatus: 200, // For legacy browser support
 };
 
