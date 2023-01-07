@@ -18,10 +18,10 @@ const cloudinary = require("../../utils/cloudinaryConfg");
 const SecurityCode = require("../../models/User/SecurityCode");
 
 const cookieOptions = {
-  // httpOnly: true,
-  domain: "ecommerce-server-23.vercel.app",
+  httpOnly: true,
   secure: true,
   maxAge: 31536000,
+  sameSite: "Strict",
 };
 
 module.exports = {
