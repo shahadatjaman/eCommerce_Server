@@ -21,7 +21,7 @@ const cookieOptions = {
   httpOnly: true,
   secure: true,
   maxAge: 15778800000,
-  // signed: true,
+  signed: true,
   sameSite: "None",
 };
 
