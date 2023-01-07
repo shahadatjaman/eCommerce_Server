@@ -21,7 +21,7 @@ const cookieOptions = {
   httpOnly: true,
   secure: true,
   maxAge: 31536000,
-  sameSite: "Strict",
+  sameSite: "none",
 };
 
 module.exports = {
