@@ -20,8 +20,7 @@ const SecurityCode = require("../../models/User/SecurityCode");
 const cookieOptions = {
   httpOnly: true,
   secure: true,
-  maxAge: 5000,
-  expires: new Date("01 12 2021"),
+  maxAge: 15778800000,
   sameSite: "None",
 };
 
