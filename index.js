@@ -23,7 +23,7 @@ require("dotenv").config({
   path: "./.env",
 });
 
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
