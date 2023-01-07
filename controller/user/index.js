@@ -658,6 +658,8 @@ module.exports = {
   async uploadUserAvatar(req, res) {
     const { _id } = req.user;
     const file = req.file;
+
+    console.log(file);
     cloudinary.v2.uploader.upload(file.path, async (error, result) => {
       if (error) {
         // handle error
