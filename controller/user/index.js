@@ -17,6 +17,11 @@ const sendEmail = require("../../utils/sendEmail");
 const cloudinary = require("../../utils/cloudinaryConfg");
 const SecurityCode = require("../../models/User/SecurityCode");
 
+const cookieOptions = {
+  httpOnly: true,
+  maxAge: 31536000,
+};
+
 module.exports = {
   async addCustomUser(req, res) {
     let { firstName, lastName, email, password } = req.body;
@@ -59,8 +64,7 @@ module.exports = {
     );
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      maxAge: 31536000,
+      ...cookieOptions,
     });
 
     return res.status(200).json({
@@ -102,13 +106,7 @@ module.exports = {
         process.env.REFRESH_TOKEN_EXPIRE
       );
 
-      res.cookie("refreshToken", refreshToken, {
-        // httpOnly: true,
-        maxAge: 31536000,
-        domain: "https://mern-ecommerce23-abuhuraira24.vercel.app/",
-        // // path: "/login",
-        // secure: true,
-      });
+      res.cookie("refreshToken", refreshToken, { ...cookieOptions });
 
       return res.status(200).json({
         message: "Successful",
@@ -153,8 +151,7 @@ module.exports = {
       );
 
       res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        maxAge: 31536000,
+        ...cookieOptions,
       });
 
       return res.status(200).json({
@@ -198,8 +195,7 @@ module.exports = {
             );
 
             res.cookie("refreshToken", refreshToken, {
-              httpOnly: true,
-              maxAge: 31536000,
+              ...cookieOptions,
             });
 
             return res.status(200).json({
@@ -380,8 +376,7 @@ module.exports = {
           );
 
           res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            maxAge: 31536000,
+            ...cookieOptions,
           });
 
           const token = tokenGenerate(
@@ -515,8 +510,6 @@ module.exports = {
         if (isvalid) {
           new_password = await bcrypt.hash(new_password, 10);
 
-          console.log(new_password);
-
           await User.findOneAndUpdate(
             { _id: _id },
             { password: new_password },
@@ -544,8 +537,7 @@ module.exports = {
           );
 
           res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            maxAge: 31536000,
+            ...cookieOptions,
           });
 
           return res.status(200).json({
