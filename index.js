@@ -13,6 +13,7 @@ var corsOptions = {
   origin: ["http://localhost:3000", "https://mern-ecommerce-23.vercel.app"],
   methods: [" GET", "POST", " PUT", "PATCH", " DELETE"],
   credentials: true,
+
   optionsSuccessStatus: 200, // For legacy browser support
 };
 
