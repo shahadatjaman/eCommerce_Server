@@ -18,7 +18,7 @@ const cloudinary = require("../../utils/cloudinaryConfg");
 const SecurityCode = require("../../models/User/SecurityCode");
 
 const cookieOptions = {
-  httpOnly: true,
+  // httpOnly: true,
   domain: "https://mern-ecommerce-23.vercel.app/",
   sameSite: "None",
   maxAge: 31536000,
