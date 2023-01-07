@@ -19,7 +19,7 @@ const SecurityCode = require("../../models/User/SecurityCode");
 
 const cookieOptions = {
   // httpOnly: true,
-  domain: "vercel.app",
+  domain: ".vercel.app",
   maxAge: 31536000,
 };
 
