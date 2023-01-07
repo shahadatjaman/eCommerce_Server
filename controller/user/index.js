@@ -22,7 +22,7 @@ const cookieOptions = {
   secure: true,
   maxAge: 15778800000,
   // signed: true,
-  // sameSite: "None",
+  sameSite: "None",
 };
 
 module.exports = {
