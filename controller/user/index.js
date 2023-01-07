@@ -103,8 +103,11 @@ module.exports = {
       );
 
       res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
+        // httpOnly: true,
         maxAge: 31536000,
+        domain: "https://mern-ecommerce23-abuhuraira24.vercel.app/",
+        // // path: "/login",
+        // secure: true,
       });
 
       return res.status(200).json({
