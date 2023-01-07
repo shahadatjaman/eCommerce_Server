@@ -19,7 +19,7 @@ const SecurityCode = require("../../models/User/SecurityCode");
 
 const cookieOptions = {
   httpOnly: true,
-  domain: "https://ecommerce-server-23.vercel.app",
+  domain: "https://mern-ecommerce-23.vercel.app/",
   sameSite: "None",
   maxAge: 31536000,
 };
