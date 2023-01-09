@@ -8,9 +8,14 @@ const orderSchema = new Schema({
     type: ObjectId,
     ...requiremnet,
   },
+
   products: {
     type: [
       {
+        vendor_id: {
+          type: ObjectId,
+          ...requiremnet,
+        },
         product_id: {
           type: String,
           ...requiremnet,

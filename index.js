@@ -10,7 +10,11 @@ const passport = require("passport");
 const commonMiddleware = require("./middleware/Validator/common/commonMid");
 
 var corsOptions = {
-  origin: ["http://localhost:3000", "https://mern-ecommerce-23.vercel.app"],
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://mern-ecommerce-23.vercel.app",
+  ],
   methods: [" GET", "POST", " PUT", "PATCH", " DELETE"],
   credentials: true,
 
@@ -40,6 +44,7 @@ app.use("/admin", require("./routes/Admin"));
 app.use("/auth", require("./routes/user"));
 app.use("/v1", require("./routes/Product"));
 app.use("/v2", require("./routes/Order/index"));
+app.use("/v3", require("./routes/Product/getProducts"));
 
 app.get("/", (req, res) => {
   res.send("Welcome!");

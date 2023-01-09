@@ -10,7 +10,6 @@ opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 
 opts.secretOrKey = process.env.ACCESS_TOKEN_SECRET_KEY;
 
-
 module.exports = (passport) => {
   passport.use(
     new JwtStrategy(opts, (payload, done) => {

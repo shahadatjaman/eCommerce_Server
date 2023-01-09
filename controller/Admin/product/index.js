@@ -26,7 +26,7 @@ module.exports = {
       price: 0.0,
       short_desc: "_",
       long_desc: "_",
-      product_status: "_",
+      product_status: "deactive",
       product_type: "_",
       SKU: "_",
       tot_rating: 0,
@@ -285,6 +285,48 @@ module.exports = {
       }
     } catch (err) {
       return serverError(res, "There was an server error!");
+    }
+  },
+
+  // Vendor product controller
+
+  async getProductsByUserId(req, res) {
+    const { _id } = req.user;
+
+    const products = await Product.find({ user_id: _id, isValid: true });
+
+    res.status(200).json({
+      products: products,
+    });
+  },
+
+  // Get product by product id for update
+  async getProductForUpdate(req, res) {
+    const { product_id } = req.params;
+
+    const product = await Product.findById(product_id);
+
+    if (product) {
+      // Find product variations,inventory and tags
+      const productVariation = await ProductVariation.find({
+        product_id,
+      });
+
+      const inventory = await ProductInventory.find({ product_id });
+      const tags = await Tag.find({ product_id });
+      const discount = await Discount.findOne({ product_id });
+
+      return res.status(200).json({
+        product,
+        productVariation,
+        discount,
+        inventory,
+        tags,
+      });
+    } else {
+      return res.status(400).json({
+        mesage: "Invalid product id",
+      });
     }
   },
 };

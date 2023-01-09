@@ -1,6 +1,6 @@
 const Order = require("../../../models/Vendor/Order");
 const { newTime, isValidID } = require("../../../utils");
-
+const Product = require("../../../models/Vendor/Product/Product");
 module.exports = {
   // Create new order
   async creareOrder(req, res) {
@@ -54,10 +54,23 @@ module.exports = {
   async getOrders(req, res) {
     const { _id } = req.user;
 
-    const orders = await Order.find({ user_id: _id });
+    let orders = await Order.find();
+
+    let filteredOrder = [];
+
+    // for (var i = 0; i < orders.length; i++) {
+    //   const products = orders[i].products;
+    //   for (var j = 0; j < products.length; j++) {
+    //     if (products[j].vendor_id.toString() === _id.toString()) {
+    //       products[j] = { ...products[j], user_id: orders[i].user_id };
+    //       console.log(products[j]);
+    //       filteredOrder = [...filteredOrder, products[j]];
+    //     }
+    //   }
+    // }
 
     res.status(200).json({
-      orders,
+      orders: filteredOrder,
     });
   },
 };

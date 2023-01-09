@@ -297,7 +297,7 @@ router.post(
 );
 
 // Delete a product
-router.delete(
+router.post(
   "/deleteproduct/:product_id",
   authAsAdmin,
   delProductValidator,
