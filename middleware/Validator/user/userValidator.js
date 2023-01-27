@@ -4,6 +4,10 @@ const User = require("../../../models/User/User");
 
 // Express validation
 const addUserValidators = [
+  check("vendorName")
+    .optional()
+    .notEmpty()
+    .withMessage("Vendor Name is required!"),
   check("firstName").trim().notEmpty().withMessage("First name is required!"),
   check("lastName").trim().notEmpty().withMessage("Last name is required!"),
   check("email")
@@ -35,6 +39,7 @@ const addUserValidators = [
     .withMessage(
       "Password must be at least 8 and should contain at least 1 lowercase, 1 upperCase, 1 number and 1 symbol!"
     ),
+  check("role").optional().notEmpty().withMessage("Role is required"),
 ];
 
 const addUserValidatorHandler = (req, res, next) => {

@@ -26,7 +26,7 @@ module.exports = {
       price: 0.0,
       short_desc: "_",
       long_desc: "_",
-      product_status: "deactive",
+      product_status: "active",
       product_type: "_",
       SKU: "_",
       tot_rating: 0,
@@ -109,7 +109,9 @@ module.exports = {
 
   // Get all products
   async getProducts(req, res) {
-    const products = await Product.find({ isValid: true });
+    const products = await Product.find({
+      isValid: true,
+    });
 
     res.status(200).json({
       products,
@@ -218,10 +220,15 @@ module.exports = {
     if (queryText) {
       name_search_regex = new RegExp(escape(queryText?.trim()), "i");
     }
-    console.log(name_search_regex);
+
     const { from, to } = req.params;
 
     const pipelineOne = [
+      // {
+      //   $match: {
+      //     product_status: "active",
+      //   },
+      // },
       maxPrice
         ? {
             $match: {
@@ -328,5 +335,20 @@ module.exports = {
         mesage: "Invalid product id",
       });
     }
+  },
+
+  // Delete products
+  async deleteProducts(req, res) {
+    const { products } = req.body;
+    const { _id } = req.user;
+    console.log(products);
+
+    await Product.deleteMany({ _id: products });
+
+    const recentProducts = await Product.find({ user_id: _id, isValid: true });
+
+    return res.status(200).json({
+      products: recentProducts,
+    });
   },
 };

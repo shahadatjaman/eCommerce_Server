@@ -2,7 +2,8 @@ const { check, validationResult } = require("express-validator");
 
 const discountValidation = [
   check("discount_percent")
-    .isLength({ min: 1 })
+    .optional()
+    .notEmpty()
     .withMessage("Discount percent is required!")
     .trim(),
 ];

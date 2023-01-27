@@ -26,17 +26,19 @@ const cookieOptions = {
 
 module.exports = {
   async addCustomUser(req, res) {
-    let { firstName, lastName, email, password } = req.body;
+    let { firstName, lastName, email, password, vendorName, role } = req.body;
 
     password = await bcrypt.hash(password, 10);
 
     const newUser = new User({
+      vendorName: vendorName ? vendorName : "",
       firstName,
       lastName,
       email,
       password,
       avatar: "",
       provider: "user",
+      role: role ? [role, "user"] : "user",
       code: "0",
       createdAt: new Date().toISOString(),
     });

@@ -13,7 +13,7 @@ module.exports = {
         });
       }
 
-      if (user.role !== "admin") {
+      if (!user.role.includes("vendor")) {
         return res.status(401).json({
           message: "Access not allowed",
         });

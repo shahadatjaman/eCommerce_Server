@@ -1,12 +1,19 @@
-const { check, validationResult } = require("express-validator");
+const { check, validationResult, param } = require("express-validator");
 
 const quantityValidation = [
+  param("product_id")
+    .notEmpty()
+    .withMessage("Prouct id is required!")
+    .isMongoId()
+    .withMessage("Product id must be valid"),
   check("quantity")
-    .isLength({ min: 1 })
+    .optional()
+    .notEmpty()
     .withMessage(" Product Quantity is required!")
     .trim(),
   check("weight")
-    .isLength({ min: 1 })
+    .optional()
+    .notEmpty()
     .withMessage(" Product weight is required!")
     .trim(),
 ];

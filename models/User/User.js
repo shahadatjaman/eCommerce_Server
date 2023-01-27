@@ -1,6 +1,10 @@
 const { Schema, model } = require("mongoose");
 
 const userSchema = new Schema({
+  vendorName: {
+    type: String,
+    trim: true,
+  },
   firstName: {
     type: String,
     required: true,
@@ -28,9 +32,13 @@ const userSchema = new Schema({
     required: true,
   },
   role: {
-    type: String,
-    enum: ["user", "admin", "manager", "staff"],
-    default: "user",
+    type: [
+      {
+        type: String,
+        enum: ["user", "vendor", "admin"],
+      },
+    ],
+    default: ["user"],
   },
   code: {
     type: String,

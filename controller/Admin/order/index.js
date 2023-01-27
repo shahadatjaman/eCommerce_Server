@@ -54,7 +54,7 @@ module.exports = {
   async getOrders(req, res) {
     const { _id } = req.user;
 
-    let orders = await Order.find();
+    let orders = await Order.find({ user_id: _id });
 
     let filteredOrder = [];
 
@@ -70,7 +70,7 @@ module.exports = {
     // }
 
     res.status(200).json({
-      orders: filteredOrder,
+      orders,
     });
   },
 };
