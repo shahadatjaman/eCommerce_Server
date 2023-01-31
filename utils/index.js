@@ -53,6 +53,9 @@ module.exports = (() => {
   const isValidToken = async (token) => {
     return await jwt.verify(token, process.env.SECRET_KEY);
   };
+  const deepClone = (state) => {
+    return JSON.parse(JSON.stringify(state));
+  };
 
   return {
     objectId,

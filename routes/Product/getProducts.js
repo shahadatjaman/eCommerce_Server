@@ -14,6 +14,10 @@ const {
   productIdValidator,
   productIdValidatorHandler,
 } = require("../../middleware/Validator/product/product_idValidation");
+const {
+  productCategoryValidatorHandler,
+  productCategoryValidator,
+} = require("../../middleware/Validator/product/getProductWithCategoryValidation");
 
 const {
   getProductsByTextValidator,
@@ -34,6 +38,10 @@ const {
   updateProductVisibility,
   updateProductVisibilityValidatorHandler,
 } = require("../../middleware/Validator/discount/update_Product_Visibility");
+const {
+  get_products,
+  get_product_by_id,
+} = require("../../controller/Admin/product/getProducts");
 
 router.get("/get-product-by-id", authAsAdmin, getProductsByUserId);
 
@@ -78,4 +86,14 @@ router.post(
   updateProductVisibilityValidatorHandler,
   set_product_visibility
 );
+
+router.post(
+  "/get_products/:from-:to",
+  productCategoryValidatorHandler,
+  productCategoryValidatorHandler,
+  get_products
+);
+
+router.get("/get_product_by_prodcut_id/:product_id", get_product_by_id);
+
 module.exports = router;

@@ -7,7 +7,7 @@ const ratingSchema = new Schema({
     ...requiremnet,
   },
   product_id: {
-    type: ObjectId,
+    type: String,
     ...requiremnet,
   },
   rating: {

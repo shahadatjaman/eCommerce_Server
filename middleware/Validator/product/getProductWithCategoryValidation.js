@@ -6,6 +6,23 @@ const productCategoryValidator = [
     .notEmpty()
     .withMessage("queryText must be provid!"),
 
+  check("sortByName")
+    .optional()
+    .notEmpty()
+    .withMessage("Sort by name value must be provid!")
+    .isMongoId()
+    .withMessage("Sort value must be valid (-1 or 1)"),
+  check("topRating")
+    .optional()
+    .notEmpty()
+    .withMessage("Sort by topRating  must be provid!"),
+  check("sortByPrice")
+    .optional()
+    .notEmpty()
+    .withMessage("Sort by price value must be provid!")
+    .isMongoId()
+    .withMessage("Sort value must be valid (-1 or 1)"),
+
   check("category_id")
     .optional()
     .notEmpty()

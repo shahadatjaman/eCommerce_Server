@@ -49,6 +49,7 @@ module.exports = {
       _id: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
+      avatar: user.avatar,
       email: user.email,
       provider: newUser.provider,
     };
@@ -182,6 +183,7 @@ module.exports = {
               firstName: user.firstName,
               lastName: user.lastName,
               email: user.email,
+              avatar: user.avatar,
             };
             const accessToken = tokenGenerate(
               {
@@ -258,6 +260,7 @@ module.exports = {
           firstName: foundUser.firstName,
           lastName: foundUser.lastName,
           email: foundUser.email,
+          avatar: foundUser.avatar,
         };
         const accessToken = tokenGenerate(
           {
@@ -360,8 +363,10 @@ module.exports = {
         if (decoded.code === code) {
           const payload = {
             _id: user._id,
-            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
             email: user.email,
+            avatar: user.avatar,
           };
 
           const accessToken = tokenGenerate(
@@ -522,7 +527,8 @@ module.exports = {
 
           const payload = {
             _id: user._id,
-            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
             email: user.email,
           };
           const accessToken = tokenGenerate(
