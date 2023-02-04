@@ -93,6 +93,8 @@ module.exports = {
     cloudinary.v2.uploader.upload(file.path, async (error, result) => {
       if (error) {
         // handle error
+        console.log(error);
+        console.log(result);
         return res.status(400).send(error);
       }
       // result contains the uploaded image details
