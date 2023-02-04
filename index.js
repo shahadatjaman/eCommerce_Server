@@ -69,5 +69,5 @@ mongoose.set("strictQuery", false);
 mongoose.connect(process.env.DB_URL).then(() => {
   console.log("MongoDB Connected...");
   httpServer.listen({ port: process.env.PORT || PORT });
-  httpServer.setTimeout = 1000;
+  httpServer.setTimeout = 10000;
 });
