@@ -663,30 +663,35 @@ module.exports = {
   async uploadUserAvatar(req, res) {
     const { _id } = req.user;
     const file = req.file;
-
     console.log(file);
-    cloudinary.v2.uploader.upload(file.path, async (error, result) => {
-      if (error) {
-        // handle error
-        return res.status(400).send(error);
-      }
-      // result contains the uploaded image details
+    if (file) {
+      cloudinary.v2.uploader.upload(file.path, async (error, result) => {
+        if (error) {
+          // handle error
+          return res.status(400).send(error);
+        }
+        // result contains the uploaded image details
 
-      try {
-        const user = await User.findByIdAndUpdate(
-          _id,
-          { avatar: result.secure_url },
-          { new: true }
-        );
+        try {
+          const user = await User.findByIdAndUpdate(
+            _id,
+            { avatar: result.secure_url },
+            { new: true }
+          );
 
-        return res.status(200).json({
-          status: 200,
-          avatar: user.avatar,
-        });
-      } catch (error) {
-        return serverError(res, "There was an server error!");
-      }
-    });
+          return res.status(200).json({
+            status: 200,
+            avatar: user.avatar,
+          });
+        } catch (error) {
+          return serverError(res, "There was an server error!");
+        }
+      });
+    } else {
+      return res.status(400).json({
+        message: "Invalid file, Please uplaod an valid file!",
+      });
+    }
   },
 
   // Update user

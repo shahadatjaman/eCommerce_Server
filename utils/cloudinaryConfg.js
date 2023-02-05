@@ -4,9 +4,9 @@ API_KEY = "563859764347624";
 API_SECRET = "ndBih7bre8-OHEII7XS6wS1uTyQ";
 // configure Cloudinary
 cloudinary.config({
-  cloud_name: "dza2t1htw",
-  api_key: "563859764347624",
-  api_secret: "ndBih7bre8-OHEII7XS6wS1uTyQ",
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
 });
 
 module.exports = cloudinary;
