@@ -72,7 +72,7 @@ module.exports = {
       {
         $limit: Number(to) === 0 ? 1 : Number(to),
       },
-      { $sample: { size: 3 } },
+      { $sample: { size: 15 } },
     ];
 
     const products = await Product.aggregate([...pipelineOne]);
