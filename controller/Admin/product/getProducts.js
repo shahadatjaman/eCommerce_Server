@@ -72,70 +72,10 @@ module.exports = {
       {
         $limit: Number(to) === 0 ? 1 : Number(to),
       },
+      { $sample: { size: 3 } },
     ];
 
     const products = await Product.aggregate([...pipelineOne]);
-
-    // for (var i = 0; i < products.length; i++) {
-    //   let variation = await Variation.find({
-    //     product_id: products[i]._id,
-    //   });
-
-    //   let discount = await Discount.findOne({ product_id: products[i]._id });
-
-    //   if (discount) {
-    //     const amount =
-    //       (Number(discount.discount_percent) / 100) * Number(products[i].price);
-
-    //     const salePrice = Number(products[i].price) - amount;
-    //     products[i] = {
-    //       ...products[i],
-    //       salePrice: salePrice,
-    //       discount: Number(products[i].price),
-    //     };
-    //   }
-    //   products[i] = {
-    //     ...products[i],
-    //     variation,
-    //   };
-
-    //   for (var j = 0; j < products[i].variation.length; j++) {
-    //     let options = await VariationOption.find({
-    //       product_variations_id: products[i].variation[j]._id,
-    //     });
-
-    //     products[i].variation[j] = {
-    //       _id: products[i].variation[j].product_id,
-    //       product_id: products[i].variation[j].product_id,
-    //       variation_img: products[i].variation[j].variation_img,
-    //       options,
-    //     };
-    //   }
-
-    //   const rating = await Rating.aggregate([
-    //     {
-    //       $match: {
-    //         product_id: products[i]._id.toString(),
-    //       },
-    //     },
-    //     {
-    //       $group: {
-    //         _id: "",
-    //         rating: { $sum: "$rating" },
-    //       },
-    //     },
-    //     {
-    //       $project: {
-    //         _id: 0,
-    //         TotalRating: "$rating",
-    //       },
-    //     },
-    //   ]);
-
-    //   products[i].total_rating = rating[0]?.TotalRating
-    //     ? rating[0].TotalRating
-    //     : 0;
-    // }
 
     async function getVariation(productId) {
       const variation = await Variation.find({ product_id: productId });
