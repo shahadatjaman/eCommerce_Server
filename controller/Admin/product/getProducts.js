@@ -103,15 +103,15 @@ module.exports = {
       const discount = await Discount.findOne({ product_id: product._id });
 
       let salePrice = product.price;
-      let discountAmount = 0;
+      let discountToPrice = 0;
       if (discount) {
-        discountAmount = (discount.discount_percent / 100) * product.price;
-        salePrice = product.price - discountAmount;
+        discountToPrice = (discount.discount_percent / 100) * product.price;
+        salePrice = product.price - discountToPrice;
       }
 
       const updatedProduct = Object.assign({}, product, {
         salePrice,
-        discount: product.price,
+        discount: discount?.discount_percent || null,
         variation,
       });
 

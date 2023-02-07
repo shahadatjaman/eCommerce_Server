@@ -8,11 +8,11 @@ module.exports = {
     const { _id } = req.user;
     const { product_id, rating, text } = req.body;
 
-    const ratings = await Rating.findOne({ product_id, user_id: _id });
+    const Productrating = await Rating.findOne({ product_id, user_id: _id });
 
-    if (ratings) {
+    if (Productrating) {
       // TODO: Update the rating
-      await Rating.findOneAndUpdate(
+      let newReview = await Rating.findOneAndUpdate(
         {
           product_id,
           user_id: _id,
@@ -24,11 +24,11 @@ module.exports = {
         { new: true, upsert: true }
       );
 
-      const productRating = await Rating.find({ product_id });
+      // const productRating = await Rating.find({ product_id });
 
       return res.status(200).json({
         message: "Ok",
-        productRating: productRating,
+        productRating: newReview,
       });
     } else {
       // TODO: Create a new raing
@@ -40,11 +40,10 @@ module.exports = {
         createdAt: newTime(),
         updatedAt: newTime(),
       });
-      await newRating.save();
+      const newReview = await newRating.save();
 
-      const productRating = await Rating.find({ product_id });
       return res.status(200).json({
-        productRating,
+        productRating: newReview,
       });
     }
   },

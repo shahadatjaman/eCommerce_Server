@@ -52,6 +52,7 @@ module.exports = {
       avatar: user.avatar,
       email: user.email,
       provider: newUser.provider,
+      role: user.role,
     };
     const accessToken = tokenGenerate(
       {
@@ -125,6 +126,7 @@ module.exports = {
         email,
         avatar,
         provider: "social ",
+        role: ["user"],
         createdAt: new Date().toISOString(),
       });
 
@@ -184,6 +186,7 @@ module.exports = {
               lastName: user.lastName,
               email: user.email,
               avatar: user.avatar,
+              role: user.role,
             };
             const accessToken = tokenGenerate(
               {
@@ -261,6 +264,7 @@ module.exports = {
           lastName: foundUser.lastName,
           email: foundUser.email,
           avatar: foundUser.avatar,
+          role: foundUser.role,
         };
         const accessToken = tokenGenerate(
           {
@@ -530,6 +534,7 @@ module.exports = {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
+            role: user.role,
           };
           const accessToken = tokenGenerate(
             {

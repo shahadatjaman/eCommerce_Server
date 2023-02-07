@@ -90,43 +90,36 @@ module.exports = {
       });
     }
 
-    try {
-      const buffer = await sharp(file).resize({ width: 300 }).toBuffer();
-      res.send(buffer);
-    } catch (error) {
-      res.status(500).send({ error: error.message });
-    }
+    cloudinary.v2.uploader.upload(file.path, async (error, result) => {
+      if (error) {
+        // handle error
+        console.log(error);
+        console.log(result);
+        return res.status(400).send(error);
+      }
+      // result contains the uploaded image details
 
-    // cloudinary.v2.uploader.upload(file.path, async (error, result) => {
-    //   if (error) {
-    //     // handle error
-    //     console.log(error);
-    //     console.log(result);
-    //     return res.status(400).send(error);
-    //   }
-    //   // result contains the uploaded image details
+      const new_variation = new ProductVariation({
+        product_id: product_id,
+        variation_img: result.secure_url,
+      });
 
-    //   const new_variation = new ProductVariation({
-    //     product_id: product_id,
-    //     variation_img: result.secure_url,
-    //   });
-
-    //   try {
-    //     const variation = await new_variation.save();
-    //     return res.status(200).json({
-    //       message: "Product variants saved successfully",
-    //       variation: variation,
-    //     });
-    //   } catch (err) {
-    //     console.log(err);
-    //     if (err) {
-    //       return serverError(
-    //         res,
-    //         "There was an server error to save variation!"
-    //       );
-    //     }
-    //   }
-    // });
+      try {
+        const variation = await new_variation.save();
+        return res.status(200).json({
+          message: "Product variants saved successfully",
+          variation: variation,
+        });
+      } catch (err) {
+        console.log(err);
+        if (err) {
+          return serverError(
+            res,
+            "There was an server error to save variation!"
+          );
+        }
+      }
+    });
   },
 
   // Remove variants
