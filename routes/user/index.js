@@ -166,4 +166,10 @@ router.post(
   updateUser
 );
 
+router.post("/remove_cookie", (req, res) => {
+  const { cookie_name } = req.body;
+  res.clearCookie(cookie_name, { expires: new Date(1) });
+  res.send("Cookie removed");
+});
+
 module.exports = router;
