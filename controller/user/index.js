@@ -94,6 +94,7 @@ module.exports = {
         lastName: user.lastName,
         email: user.email,
         provider: user.provider,
+        role: user.role,
       };
 
       const accessToken = tokenGenerate(

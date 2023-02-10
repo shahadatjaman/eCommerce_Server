@@ -166,9 +166,17 @@ router.post(
   updateUser
 );
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: false,
+  maxAge: 0,
+  sameSite: "None",
+};
+
 router.post("/remove_cookie", (req, res) => {
   const { cookie_name } = req.body;
-  res.clearCookie(cookie_name, { expires: new Date(1) });
+  console.log(cookie_name);
+  res.cookie(cookie_name, { ...cookieOptions });
   res.send("Cookie removed");
 });
 

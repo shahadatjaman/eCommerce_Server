@@ -154,6 +154,7 @@ module.exports = {
     const tags = await Tag.find({ product_id: product_id });
     const inventories = await ProductInventory.find({ product_id: product_id });
     const discount = await Discount.findOne({ product_id: product_id });
+    const rating = await Rating.findOne({ product_id: product_id });
 
     if (product) {
       return res.status(200).json({
@@ -163,6 +164,7 @@ module.exports = {
         discount,
         tags,
         options,
+        rating,
       });
     } else {
       return res.status(400).json({
