@@ -187,6 +187,7 @@ module.exports = {
               lastName: user.lastName,
               email: user.email,
               avatar: user.avatar,
+              provider: user.provider,
               role: user.role,
             };
             const accessToken = tokenGenerate(
