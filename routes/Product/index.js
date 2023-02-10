@@ -276,7 +276,7 @@ router.post(
 );
 
 // Delete product variation option
-router.delete("/deleteoption/:option_id", authAsAdmin, deleteOption);
+router.post("/deleteoption/:option_id", authAsAdmin, deleteOption);
 
 // Create a new discount
 router.post(
