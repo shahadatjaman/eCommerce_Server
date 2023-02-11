@@ -373,6 +373,7 @@ module.exports = {
             lastName: user.lastName,
             email: user.email,
             avatar: user.avatar,
+            role: user.role,
           };
 
           const accessToken = tokenGenerate(
