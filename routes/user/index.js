@@ -176,7 +176,7 @@ const cookieOptions = {
 router.post("/remove_cookie", (req, res) => {
   const { cookie_name } = req.body;
   console.log(cookie_name);
-  res.cookie(cookie_name, { ...cookieOptions });
+  res.cookie(cookie_name, "", { ...cookieOptions });
   res.send("Cookie removed");
 });
 
