@@ -168,15 +168,13 @@ router.post(
 
 const cookieOptions = {
   httpOnly: true,
-  secure: false,
+  secure: true,
   maxAge: 0,
   sameSite: "None",
 };
 
 router.post("/remove_cookie", (req, res) => {
-  const { cookie_name } = req.body;
-  console.log(cookie_name);
-  res.cookie(cookie_name, "", { ...cookieOptions });
+  res.cookie("refreshToken", "", { ...cookieOptions });
   res.send("Cookie removed");
 });
 
