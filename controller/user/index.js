@@ -267,6 +267,7 @@ module.exports = {
           email: foundUser.email,
           avatar: foundUser.avatar,
           role: foundUser.role,
+          provider: foundUser.provider,
         };
         const accessToken = tokenGenerate(
           {
@@ -374,6 +375,7 @@ module.exports = {
             email: user.email,
             avatar: user.avatar,
             role: user.role,
+            provider: user.provider,
           };
 
           const accessToken = tokenGenerate(
@@ -538,6 +540,7 @@ module.exports = {
             lastName: user.lastName,
             email: user.email,
             role: user.role,
+            provider: user.provider,
           };
           const accessToken = tokenGenerate(
             {
