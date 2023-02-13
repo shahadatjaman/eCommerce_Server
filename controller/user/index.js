@@ -310,7 +310,7 @@ module.exports = {
 
       const result = await sendEmail(
         email,
-        "Xpart,Very Your Account!",
+        "BazaarHub,Verify Your Account!",
         htmlUI(randomCode)
       );
 
